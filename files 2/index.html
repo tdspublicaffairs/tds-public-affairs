@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TDS Public Affairs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garant:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ── Reset ──────────────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer}
+
+:root{
+  --navy:       #0d2b3e;
+  --navy-light: #143347;
+  --navy-deep:  #081d2b;
+  --gold:       #b8965a;
+  --gold-lt:    #d4b07a;
+  --cream:      #f7f4ef;
+  --white:      #ffffff;
+  --text:       #1a2a35;
+  --muted:      #5a7080;
+  --border:     #ddd8cf;
+  --font-d: 'Cormorant Garant', Georgia, serif;
+  --font-u: 'Jost', system-ui, sans-serif;
+  --max:    1200px;
+  --sp:     clamp(4rem,8vw,8rem);
+}
+
+body{font-family:var(--font-u);background:var(--white);color:var(--text);line-height:1.7;-webkit-font-smoothing:antialiased}
+
+/* ── Utility ────────────────────────────────────────────────── */
+.inner{max-width:var(--max);margin:0 auto;padding:0 clamp(1.5rem,4vw,3rem)}
+.eyebrow{font-size:.68rem;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;gap:.75rem;margin-bottom:1rem}
+.eyebrow::before,.eyebrow::after{content:'';display:block;width:1.75rem;height:1px;background:var(--gold)}
+.eyebrow.left::after{display:none}
+.section-title{font-family:var(--font-d);font-size:clamp(2rem,4.5vw,3.5rem);font-weight:400;color:var(--navy);line-height:1.12}
+.section-title em{font-style:italic;color:var(--gold-lt)}
+.rule{width:3rem;height:2px;background:var(--gold);margin-bottom:2rem}
+.arrow-svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;transition:transform .2s}
+.btn{display:inline-flex;align-items:center;gap:.55rem;padding:.85rem 2.25rem;font-size:.7rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;transition:all .25s;border:1px solid}
+.btn-dark{background:var(--navy);color:var(--white);border-color:var(--navy)}
+.btn-dark:hover{background:transparent;color:var(--navy)}
+.btn-light{background:transparent;color:var(--white);border-color:rgba(255,255,255,.5)}
+.btn-light:hover{background:var(--white);color:var(--navy)}
+.btn-gold{background:var(--gold);color:var(--navy-deep);border-color:var(--gold)}
+.btn-gold:hover{background:var(--gold-lt);border-color:var(--gold-lt)}
+.btn:hover .arrow-svg{transform:translateX(4px)}
+
+/* ── Nav ────────────────────────────────────────────────────── */
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(13,43,62,.97);backdrop-filter:blur(10px);border-bottom:1px solid rgba(184,150,90,.2);transition:box-shadow .3s}
+.nav-inner{max-width:var(--max);margin:0 auto;padding:0 clamp(1.5rem,4vw,3rem);height:clamp(60px,8vh,72px);display:flex;align-items:center;justify-content:space-between;gap:2rem}
+.nav-logo{cursor:pointer;display:flex;align-items:center}
+.nav-links{display:flex;gap:clamp(1.5rem,2.5vw,2.25rem);list-style:none}
+.nav-links a{font-size:.69rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.7);transition:color .2s;padding-bottom:2px;border-bottom:1px solid transparent}
+.nav-links a:hover,.nav-links a.active{color:var(--gold-lt);border-bottom-color:var(--gold-lt)}
+.nav-toggle{display:none;flex-direction:column;gap:5px;background:none;border:none;padding:4px}
+.nav-toggle span{display:block;width:22px;height:1.5px;background:var(--white);transition:all .3s}
+
+/* ── Mobile overlay ─────────────────────────────────────────── */
+.mob-nav{display:none;position:fixed;inset:0;background:var(--navy-deep);z-index:300;flex-direction:column;align-items:center;justify-content:center;gap:2.5rem}
+.mob-nav.open{display:flex}
+.mob-nav a{font-family:var(--font-d);font-size:clamp(2rem,6vw,3rem);font-weight:300;color:var(--white);letter-spacing:.04em;transition:color .2s}
+.mob-nav a:hover{color:var(--gold-lt)}
+.mob-close{position:absolute;top:1.5rem;right:1.5rem;background:none;border:none;color:var(--white);font-size:2rem;line-height:1;padding:.4rem .6rem}
+
+/* ── Page wrapper ───────────────────────────────────────────── */
+.page{display:none;padding-top:clamp(60px,8vh,72px)}
+.page.active{display:block}
+
+/* ── Hero shared ────────────────────────────────────────────── */
+.hero{position:relative;min-height:clamp(440px,62vh,700px);display:flex;align-items:flex-end;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background-size:cover;background-position:center 40%;transform:scale(1.04);animation:hscale 12s ease-out forwards}
+@keyframes hscale{from{transform:scale(1.04)}to{transform:scale(1)}}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(8,29,43,.96) 0%,rgba(13,43,62,.72) 40%,rgba(13,43,62,.35) 100%)}
+.hero-content{position:relative;z-index:2;width:100%;max-width:var(--max);margin:0 auto;padding:clamp(2.5rem,5vw,4.5rem) clamp(1.5rem,4vw,3rem)}
+.hero-ew{font-size:.69rem;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:.9rem;display:flex;align-items:center;gap:.75rem}
+.hero-ew::before{content:'';display:block;width:2.5rem;height:1px;background:var(--gold)}
+.hero-h1{font-family:var(--font-d);font-size:clamp(3rem,8vw,6.5rem);font-weight:300;color:var(--white);line-height:1.0;letter-spacing:-.01em}
+.hero-h1 em{font-style:italic;color:var(--gold-lt)}
+.hero-sub{font-size:clamp(.95rem,1.5vw,1.1rem);color:rgba(255,255,255,.72);font-weight:300;max-width:52ch;margin-top:1.25rem;line-height:1.8}
+.hero-cta{margin-top:2rem;display:flex;gap:1rem;flex-wrap:wrap}
+
+/* ── Home Page ──────────────────────────────────────────────── */
+.home-intro{background:var(--white);padding:var(--sp) clamp(1.5rem,4vw,3rem)}
+.home-intro-grid{max-width:var(--max);margin:0 auto;display:grid;grid-template-columns:1fr 1.6fr;gap:clamp(3rem,7vw,8rem);align-items:center}
+.home-intro-img{position:relative;overflow:hidden}
+.home-intro-img::before{content:'';position:absolute;inset:0;background:var(--navy);mix-blend-mode:multiply;opacity:.45;pointer-events:none;z-index:1;transition:opacity .4s}
+.home-intro-img::after{content:'';position:absolute;bottom:-1.25rem;right:-1.25rem;width:60%;height:60%;border:1.5px solid var(--gold);z-index:-1}
+.home-intro-img img{width:100%;aspect-ratio:4/3;object-fit:cover;filter:grayscale(100%) brightness(.9);transition:filter .4s}
+.home-intro-img:hover::before{opacity:.15}
+.home-intro-img:hover img{filter:grayscale(30%) brightness(1.02)}
+.home-intro-text .rule{margin-bottom:1.75rem}
+.home-intro-text p{font-size:clamp(1rem,1.5vw,1.12rem);line-height:1.85;color:var(--text);font-weight:300}
+.home-intro-text p+p{margin-top:1.25rem}
+.home-intro-text .btn{margin-top:2.25rem}
+
+.home-services{background:var(--cream);padding:var(--sp) clamp(1.5rem,4vw,3rem);position:relative}
+.home-services::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,var(--gold),transparent)}
+.services-head{text-align:center;margin-bottom:clamp(2.5rem,5vw,4rem)}
+.services-grid{max-width:var(--max);margin:0 auto;display:grid;grid-template-columns:repeat(2,1fr);gap:1.5px;background:var(--border)}
+.svc-card{background:var(--white);padding:clamp(1.75rem,3.5vw,2.75rem);transition:background .25s}
+.svc-card:hover{background:var(--cream)}
+.svc-icon{width:2.5rem;height:2.5rem;margin-bottom:1.25rem;stroke:var(--gold);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.svc-name{font-family:var(--font-d);font-size:clamp(1.1rem,2vw,1.35rem);font-weight:500;color:var(--navy);margin-bottom:.6rem}
+.svc-text{font-size:.9rem;line-height:1.75;color:var(--muted);font-weight:300}
+
+.home-when{background:var(--navy);padding:var(--sp) clamp(1.5rem,4vw,3rem);position:relative;overflow:hidden}
+.home-when::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 80% 50%,rgba(184,150,90,.08) 0%,transparent 60%);pointer-events:none}
+.home-when-grid{max-width:var(--max);margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:clamp(3rem,7vw,9rem);align-items:start}
+.when-label{font-size:.68rem;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;gap:.75rem;margin-bottom:1.25rem}
+.when-label::before{content:'';display:block;width:1.75rem;height:1px;background:var(--gold)}
+.when-h{font-family:var(--font-d);font-size:clamp(1.6rem,3.5vw,2.6rem);font-weight:400;color:var(--white);line-height:1.2;margin-bottom:1.25rem}
+.when-body{font-size:clamp(.95rem,1.4vw,1.05rem);line-height:1.85;color:rgba(255,255,255,.6);font-weight:300;margin-bottom:2rem}
+.when-list{list-style:none;display:flex;flex-direction:column;gap:0}
+.when-list li{padding:1rem 0;border-bottom:1px solid rgba(255,255,255,.08);font-size:.92rem;color:rgba(255,255,255,.65);font-weight:300;display:flex;align-items:center;gap:.9rem}
+.when-list li::before{content:'';display:block;width:.5rem;height:.5rem;background:var(--gold);flex-shrink:0;transform:rotate(45deg)}
+
+.home-sectors{background:var(--cream);padding:clamp(3rem,6vw,5rem) clamp(1.5rem,4vw,3rem)}
+.home-sectors .inner{display:flex;align-items:center;flex-wrap:wrap;gap:2rem;justify-content:space-between}
+.sectors-label{font-size:.68rem;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);white-space:nowrap}
+.sectors-strip{display:flex;flex-wrap:wrap;gap:1rem}
+.sector-tag{padding:.5rem 1.1rem;border:1px solid var(--border);font-size:.72rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--navy);background:var(--white);transition:all .2s}
+.sector-tag:hover{border-color:var(--gold);color:var(--gold)}
+
+.home-where{background:var(--white);padding:var(--sp) clamp(1.5rem,4vw,3rem)}
+.home-where-grid{max-width:var(--max);margin:0 auto;display:grid;grid-template-columns:1fr 1.4fr;gap:clamp(3rem,7vw,8rem);align-items:start}
+.where-list{list-style:none;display:flex;flex-direction:column;gap:0;margin-top:1.75rem}
+.where-list li{padding:1rem 0;border-bottom:1px solid var(--border);font-size:clamp(.9rem,1.5vw,1rem);color:var(--text);font-weight:300;display:flex;align-items:center;gap:.9rem}
+.where-list li::before{content:'';display:block;width:.45rem;height:.45rem;background:var(--gold);flex-shrink:0;transform:rotate(45deg)}
+.where-images{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+.where-img{aspect-ratio:4/3;overflow:hidden;position:relative}
+.where-img::after{content:'';position:absolute;inset:0;background:var(--navy);mix-blend-mode:multiply;opacity:.5;pointer-events:none;z-index:1;transition:opacity .4s}
+.where-img img{width:100%;height:100%;object-fit:cover;filter:grayscale(100%) brightness(.88);transition:transform .5s,filter .4s}
+.where-img:hover::after{opacity:.18}
+.where-img:hover img{transform:scale(1.04);filter:grayscale(25%) brightness(1)}
+.where-img.tall{aspect-ratio:3/4;grid-row:span 2}
+
+.home-posts{background:var(--cream);padding:var(--sp) clamp(1.5rem,4vw,3rem)}
+.posts-head{text-align:center;margin-bottom:clamp(2.5rem,5vw,4rem)}
+.posts-grid{max-width:var(--max);margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:1.75rem}
+
+/* ── Post Cards ─────────────────────────────────────────────── */
+.post-card{background:var(--white);border:1px solid var(--border);overflow:hidden;cursor:pointer;transition:transform .3s,box-shadow .3s}
+.post-card:hover{transform:translateY(-5px);box-shadow:0 16px 40px rgba(13,43,62,.1)}
+.post-card-img{aspect-ratio:16/9;overflow:hidden;background:var(--navy);position:relative}
+.post-card-img::after{content:'';position:absolute;inset:0;background:var(--navy);mix-blend-mode:multiply;opacity:.45;pointer-events:none;z-index:1;transition:opacity .4s}
+.post-card-img img{width:100%;height:100%;object-fit:cover;filter:grayscale(100%) brightness(.88);transition:transform .4s,filter .4s}
+.post-card:hover .post-card-img::after{opacity:.15}
+.post-card:hover .post-card-img img{transform:scale(1.04);filter:grayscale(25%) brightness(1.02)}
+.post-card-body{padding:1.5rem}
+.post-meta{font-size:.65rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:.6rem}
+.post-card-title{font-family:var(--font-d);font-size:clamp(1rem,2vw,1.2rem);font-weight:500;color:var(--navy);line-height:1.3;margin-bottom:.75rem}
+.post-card-excerpt{font-size:.85rem;line-height:1.7;color:var(--muted);font-weight:300;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.post-card-footer{padding:.9rem 1.5rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.post-read-link{font-size:.67rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;gap:.45rem;transition:gap .2s}
+.post-card:hover .post-read-link{gap:.75rem}
+
+/* ── About Page ─────────────────────────────────────────────── */
+.about-intro{background:var(--white);padding:var(--sp) clamp(1.5rem,4vw,3rem)}
+.about-grid{max-width:var(--max);margin:0 auto;display:grid;grid-template-columns:1fr 2fr;gap:clamp(3rem,6vw,7rem);align-items:start}
+.about-label{font-size:.68rem;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;gap:.75rem;margin-bottom:1.25rem}
+.about-label::before{content:'';display:block;width:1.75rem;height:1px;background:var(--gold)}
+.about-h2{font-family:var(--font-d);font-size:clamp(1.6rem,3.5vw,2.6rem);font-weight:400;color:var(--navy);line-height:1.2}
+.about-body{font-size:clamp(1rem,1.5vw,1.12rem);line-height:1.85;color:var(--text);font-weight:300}
+.about-body p+p{margin-top:1.25rem}
+
+.team-section{background:var(--cream);padding:var(--sp) clamp(1.5rem,4vw,3rem);position:relative}
+.team-section::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,var(--gold),transparent)}
+.team-head{text-align:center;margin-bottom:clamp(2.5rem,5vw,4.5rem)}
+.team-grid{max-width:900px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(1.5rem,3vw,2.5rem)}
+.team-card{background:var(--white);border:1px solid var(--border);overflow:hidden;transition:transform .35s,box-shadow .35s}
+.team-card:hover{transform:translateY(-6px);box-shadow:0 20px 50px rgba(13,43,62,.12)}
+.team-photo{aspect-ratio:3/4;overflow:hidden;background:var(--navy)}
+.team-photo img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
+.team-card:hover .team-photo img{transform:scale(1.04)}
+.team-info{padding:clamp(1.25rem,2.5vw,1.75rem);border-top:2px solid var(--gold)}
+.team-name{font-family:var(--font-d);font-size:clamp(1.1rem,2.5vw,1.4rem);font-weight:500;color:var(--navy);margin-bottom:.3rem}
+.team-title{font-size:.68rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:1.25rem}
+.team-link{display:inline-flex;align-items:center;gap:.45rem;font-size:.67rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);transition:gap .2s}
+.team-card:hover .team-link{gap:.75rem}
+
+.values-section{background:var(--navy);padding:var(--sp) clamp(1.5rem,4vw,3rem);position:relative;overflow:hidden}
+.values-section::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 80% 50%,rgba(184,150,90,.05) 0%,transparent 60%);pointer-events:none}
+.values-grid{max-width:var(--max);margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:clamp(3rem,7vw,9rem);align-items:center}
+.values-left{}.values-label{font-size:.68rem;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;gap:.75rem;margin-bottom:1.25rem}
+.values-label::before{content:'';display:block;width:1.75rem;height:1px;background:var(--gold)}
+.values-h{font-family:var(--font-d);font-size:clamp(2rem,4vw,3.2rem);font-weight:300;color:var(--white);line-height:1.2;margin-bottom:1.5rem}
+.values-h em{font-style:italic;color:var(--gold-lt)}
+.values-body{font-size:clamp(.95rem,1.4vw,1.05rem);line-height:1.85;color:rgba(255,255,255,.6);font-weight:300;max-width:44ch}
+.pillars{display:flex;flex-direction:column;gap:1.5rem}
+.pillar{padding:1.5rem 1.75rem;border-left:2px solid rgba(184,150,90,.3);transition:border-color .3s}
+.pillar:hover{border-left-color:var(--gold)}
+.pillar-name{font-family:var(--font-d);font-size:clamp(1.05rem,2vw,1.25rem);font-weight:500;color:var(--white);margin-bottom:.4rem}
+.pillar-text{font-size:.87rem;line-height:1.7;color:rgba(255,255,255,.5);font-weight:300}
+
+/* ── Solutions Page ─────────────────────────────────────────── */
+.sol-intro{background:var(--white);padding:var(--sp) clamp(1.5rem,4vw,3rem)}
+.sol-intro-grid{max-width:var(--max);margin:0 auto;display:grid;grid-template-columns:1fr 1.6fr;gap:clamp(3rem,7vw,8rem);align-items:center}
+.sol-intro-text h2{font-family:var(--font-d);font-size:clamp(1.6rem,3.5vw,2.6rem);font-weight:400;color:var(--navy);line-height:1.2;margin-bottom:1.5rem}
+.sol-intro-text p{font-size:clamp(.95rem,1.4vw,1.05rem);line-height:1.85;color:var(--text);font-weight:300;max-width:55ch}
+.sol-intro-text p+p{margin-top:1.2rem}
+.sol-intro-img{position:relative;overflow:hidden}
+.sol-intro-img::after{content:'';position:absolute;inset:0;background:var(--navy);mix-blend-mode:multiply;opacity:.45;pointer-events:none;z-index:1}
+.sol-intro-img img{width:100%;aspect-ratio:3/4;object-fit:cover;filter:grayscale(100%) brightness(.88)}
+
+.how-engage{background:var(--cream);padding:var(--sp) clamp(1.5rem,4vw,3rem)}
+.how-engage-grid{max-width:var(--max);margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:clamp(3rem,7vw,8rem);align-items:start}
+.engage-h{font-family:var(--font-d);font-size:clamp(1.6rem,3vw,2.4rem);font-weight:400;color:var(--navy);line-height:1.2;margin-bottom:1.5rem}
+.engage-body{font-size:clamp(.95rem,1.4vw,1.02rem);line-height:1.85;color:var(--text);font-weight:300}
+.engage-body p+p{margin-top:1.2rem}
+.engage-list{list-style:none;display:flex;flex-direction:column;gap:0;margin-top:1.5rem}
+.engage-list li{padding:.9rem 0;border-bottom:1px solid var(--border);font-size:.92rem;color:var(--text);font-weight:300;display:flex;align-items:center;gap:.9rem}
+.engage-list li::before{content:'';display:block;width:.45rem;height:.45rem;background:var(--gold);flex-shrink:0;transform:rotate(45deg)}
+
+.core-areas{background:var(--white);padding:var(--sp) clamp(1.5rem,4vw,3rem)}
+.core-head{text-align:center;max-width:var(--max);margin:0 auto clamp(2.5rem,5vw,4rem)}
+.core-grid{max-width:var(--max);margin:0 auto;display:grid;grid-template-columns:repeat(2,1fr);gap:1.5px;background:var(--border)}
+.core-card{background:var(--white);padding:clamp(2rem,4vw,3rem);transition:background .25s}
+.core-card:hover{background:var(--cream)}
+.core-card-num{font-family:var(--font-d);font-size:3.5rem;font-weight:300;color:rgba(184,150,90,.2);line-height:1;margin-bottom:.75rem}
+.core-card-name{font-family:var(--font-d);font-size:clamp(1.1rem,2vw,1.45rem);font-weight:500;color:var(--navy);margin-bottom:.9rem}
+.core-card-text{font-size:.9rem;line-height:1.78;color:var(--muted);font-weight:300}
+
+.integrated{background:var(--navy);padding:var(--sp) clamp(1.5rem,4vw,3rem);text-align:center;position:relative;overflow:hidden}
+.integrated::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(184,150,90,.06) 0%,transparent 65%);pointer-events:none}
+.integrated-inner{max-width:800px;margin:0 auto;position:relative}
+.integrated-h{font-family:var(--font-d);font-size:clamp(2rem,4vw,3rem);font-weight:300;color:var(--white);line-height:1.2;margin-bottom:1.5rem}
+.integrated-h em{font-style:italic;color:var(--gold-lt)}
+.integrated-body{font-size:clamp(.95rem,1.4vw,1.05rem);line-height:1.85;color:rgba(255,255,255,.6);font-weight:300;margin-bottom:2.5rem}
+
+/* ── Insights Page ──────────────────────────────────────────── */
+.insights-header{background:var(--navy);padding:clamp(4rem,8vw,7rem) clamp(1.5rem,4vw,3rem);text-align:center}
+.insights-header h1{font-family:var(--font-d);font-size:clamp(2.5rem,6vw,5rem);font-weight:300;color:var(--white);line-height:1.1}
+.insights-header h1 em{font-style:italic;color:var(--gold-lt)}
+.insights-header p{font-size:clamp(.95rem,1.5vw,1.05rem);color:rgba(255,255,255,.55);font-weight:300;max-width:50ch;margin:1.25rem auto 0;line-height:1.8}
+.insights-body{background:var(--white);padding:var(--sp) clamp(1.5rem,4vw,3rem)}
+.all-posts-grid{max-width:var(--max);margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:1.75rem}
+.insights-cta{background:var(--cream);padding:clamp(3rem,6vw,5rem) clamp(1.5rem,4vw,3rem);text-align:center;border-top:1px solid var(--border)}
+
+/* ── Post Page ──────────────────────────────────────────────── */
+.post-hero{background:var(--navy);padding:clamp(5rem,10vw,8rem) clamp(1.5rem,4vw,3rem) clamp(3rem,6vw,5rem);position:relative;overflow:hidden}
+.post-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 70% 50%,rgba(184,150,90,.07) 0%,transparent 60%);pointer-events:none}
+.post-hero-inner{max-width:800px;margin:0 auto;position:relative}
+.post-cat{font-size:.67rem;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:1.25rem}
+.post-hero-title{font-family:var(--font-d);font-size:clamp(2rem,5vw,3.8rem);font-weight:400;color:var(--white);line-height:1.1;margin-bottom:1.5rem}
+.post-byline{display:flex;align-items:center;gap:1.5rem;font-size:.72rem;color:rgba(255,255,255,.45);letter-spacing:.04em}
+.post-byline span{display:flex;align-items:center;gap:.4rem}
+.post-body{background:var(--white);padding:clamp(3rem,6vw,5rem) clamp(1.5rem,4vw,3rem)}
+.post-body-inner{max-width:var(--max);margin:0 auto;display:grid;grid-template-columns:1fr 340px;gap:clamp(3rem,5vw,5rem);align-items:start}
+.post-content{max-width:68ch}
+.post-feat-img{width:100%;aspect-ratio:3/2;object-fit:cover;margin-bottom:2.5rem;filter:grayscale(100%) brightness(.85) sepia(12%)}
+.post-text{font-size:clamp(1rem,1.5vw,1.08rem);line-height:1.9;color:var(--text);font-weight:300}
+.post-text p{margin-bottom:1.5rem}
+.post-text strong{font-weight:600;color:var(--navy)}
+.post-text em{font-style:italic}
+.post-sidebar{position:sticky;top:calc(clamp(60px,8vh,72px) + 2rem)}
+.sidebar-label{font-size:.65rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:1.25rem;padding-bottom:.75rem;border-bottom:1px solid var(--border)}
+.sidebar-posts{display:flex;flex-direction:column;gap:0}
+.sidebar-post{padding:1rem 0;border-bottom:1px solid var(--border);cursor:pointer;transition:opacity .2s}
+.sidebar-post:hover{opacity:.75}
+.sidebar-post-date{font-size:.63rem;color:var(--gold);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.35rem}
+.sidebar-post-title{font-family:var(--font-d);font-size:.98rem;font-weight:500;color:var(--navy);line-height:1.35}
+
+/* ── Contact Page ───────────────────────────────────────────── */
+.contact-page{background:var(--white);padding:var(--sp) clamp(1.5rem,4vw,3rem);min-height:70vh}
+.contact-grid{max-width:var(--max);margin:0 auto;display:grid;grid-template-columns:1fr 1.4fr;gap:clamp(3rem,7vw,8rem);align-items:start}
+.contact-info-label{font-size:.68rem;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;gap:.75rem;margin-bottom:1.25rem}
+.contact-info-label::before{content:'';display:block;width:1.75rem;height:1px;background:var(--gold)}
+.contact-h{font-family:var(--font-d);font-size:clamp(2rem,4.5vw,3.5rem);font-weight:400;color:var(--navy);line-height:1.15;margin-bottom:1.5rem}
+.contact-intro{font-size:clamp(.95rem,1.4vw,1.05rem);line-height:1.85;color:var(--text);font-weight:300;max-width:46ch;margin-bottom:2.5rem}
+.contact-detail{display:flex;flex-direction:column;gap:1.25rem}
+.cd-row{display:flex;align-items:center;gap:.9rem}
+.cd-icon{width:1.75rem;height:1.75rem;stroke:var(--gold);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.cd-text{font-size:.9rem;color:var(--muted);font-weight:300}
+.cd-text a{color:var(--gold-lt);transition:color .2s}
+.cd-text a:hover{color:var(--navy)}
+.contact-form{background:var(--cream);padding:clamp(2rem,4vw,3rem);border:1px solid var(--border)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
+.form-group{display:flex;flex-direction:column;gap:.4rem;margin-bottom:1rem}
+.form-label{font-size:.65rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--navy)}
+.form-label sup{color:var(--gold)}
+.form-input,.form-textarea{padding:.8rem 1rem;background:var(--white);border:1px solid var(--border);font-family:var(--font-u);font-size:.9rem;color:var(--text);outline:none;transition:border-color .2s;-webkit-appearance:none;border-radius:0}
+.form-input:focus,.form-textarea:focus{border-color:var(--gold)}
+.form-textarea{resize:vertical;min-height:120px}
+.form-submit{width:100%;padding:.95rem;background:var(--navy);color:var(--white);border:1px solid var(--navy);font-family:var(--font-u);font-size:.7rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;transition:all .25s;cursor:pointer}
+.form-submit:hover{background:transparent;color:var(--navy)}
+
+/* ── CTA band ───────────────────────────────────────────────── */
+.cta-band{background:var(--cream);padding:clamp(3.5rem,7vw,6rem) clamp(1.5rem,4vw,3rem);text-align:center;border-top:1px solid var(--border)}
+.cta-band-inner{max-width:650px;margin:0 auto}
+.cta-h{font-family:var(--font-d);font-size:clamp(2rem,4.5vw,3.2rem);font-weight:400;color:var(--navy);line-height:1.15;margin-bottom:1rem}
+.cta-h em{font-style:italic;color:var(--gold-lt)}
+.cta-sub{font-size:clamp(.9rem,1.4vw,1.02rem);color:var(--muted);font-weight:300;line-height:1.8;margin-bottom:2.25rem}
+
+/* ── Footer ─────────────────────────────────────────────────── */
+.footer{background:var(--navy-deep);padding:clamp(3rem,6vw,5rem) clamp(1.5rem,4vw,3rem);border-top:1px solid rgba(184,150,90,.2)}
+.footer-inner{max-width:var(--max);margin:0 auto}
+.footer-top{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:clamp(2rem,5vw,5rem);padding-bottom:clamp(2rem,4vw,3.5rem);border-bottom:1px solid rgba(255,255,255,.07);margin-bottom:2rem}
+
+.footer-tagline{font-size:.82rem;color:rgba(255,255,255,.38);line-height:1.7;font-weight:300;max-width:30ch;margin-bottom:1.75rem}
+.footer-email{font-size:.78rem;color:var(--gold-lt);transition:color .2s}
+.footer-email:hover{color:var(--white)}
+.footer-col-label{font-size:.63rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:1.25rem}
+.footer-links{list-style:none;display:flex;flex-direction:column;gap:.7rem}
+.footer-links a{font-size:.84rem;color:rgba(255,255,255,.5);font-weight:300;transition:color .2s}
+.footer-links a:hover{color:var(--gold-lt)}
+.nl-row{display:flex;gap:0;margin-top:.5rem}
+.nl-input{flex:1;padding:.72rem 1rem;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-right:none;color:var(--white);font-family:var(--font-u);font-size:.82rem;outline:none;transition:border-color .2s;min-width:0;border-radius:0}
+.nl-input::placeholder{color:rgba(255,255,255,.28)}
+.nl-input:focus{border-color:var(--gold)}
+.nl-btn{padding:.72rem 1.1rem;background:var(--gold);border:1px solid var(--gold);color:var(--navy-deep);font-family:var(--font-u);font-size:.66rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:background .2s;white-space:nowrap;border-radius:0}
+.nl-btn:hover{background:var(--gold-lt)}
+.footer-bottom{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem}
+.footer-legal{font-size:.7rem;color:rgba(255,255,255,.22);letter-spacing:.04em}
+.footer-legal a{color:rgba(255,255,255,.32);transition:color .2s}
+.footer-legal a:hover{color:rgba(255,255,255,.6)}
+.footer-legal span{margin:0 .5rem}
+
+/* ── Fade animations ────────────────────────────────────────── */
+.fu{opacity:0;transform:translateY(22px);transition:opacity .65s ease,transform .65s ease}
+.fu.vis{opacity:1;transform:translateY(0)}
+.fu:nth-child(2){transition-delay:.1s}
+.fu:nth-child(3){transition-delay:.2s}
+.fu:nth-child(4){transition-delay:.3s}
+
+/* ── Responsive ─────────────────────────────────────────────── */
+@media(max-width:1000px){
+  .home-intro-grid,.sol-intro-grid,.home-where-grid,.contact-grid{grid-template-columns:1fr}
+  .sol-intro-img,.home-intro-img{display:none}
+  .home-when-grid,.values-grid,.how-engage-grid{grid-template-columns:1fr;gap:3rem}
+  .post-body-inner{grid-template-columns:1fr}
+  .post-sidebar{display:none}
+  .footer-top{grid-template-columns:1fr 1fr}
+  .footer-top>:first-child{grid-column:1/-1}
+}
+@media(max-width:750px){
+  .nav-links{display:none}
+  .nav-toggle{display:flex}
+  .services-grid,.core-grid{grid-template-columns:1fr}
+  .posts-grid,.all-posts-grid{grid-template-columns:1fr}
+  .home-where-grid,.team-grid{grid-template-columns:1fr}
+  .form-row{grid-template-columns:1fr}
+  .footer-top{grid-template-columns:1fr}
+}
+@media(max-width:500px){
+  .where-images{grid-template-columns:1fr}
+  .where-img.tall{aspect-ratio:4/3;grid-row:auto}
+  .home-sectors .inner{flex-direction:column;align-items:flex-start}
+}
+
+/* ── Bio Modals ─────────────────────────────────────────────── */
+.modal-overlay{position:fixed;inset:0;background:rgba(8,29,43,.85);z-index:500;display:flex;align-items:center;justify-content:center;padding:clamp(1rem,4vw,3rem);opacity:0;pointer-events:none;transition:opacity .35s}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--white);max-width:780px;width:100%;max-height:90vh;overflow-y:auto;position:relative;display:grid;grid-template-columns:260px 1fr;transition:transform .35s;transform:translateY(20px)}
+.modal-overlay.open .modal{transform:translateY(0)}
+.modal-photo{position:relative;overflow:hidden;background:var(--navy)}
+.modal-photo img{width:100%;height:100%;object-fit:cover;display:block}
+.modal-body{padding:clamp(1.75rem,3vw,2.75rem)}
+.modal-close{position:absolute;top:1rem;right:1rem;background:none;border:none;font-size:1.5rem;color:var(--muted);cursor:pointer;line-height:1;padding:.25rem .5rem;transition:color .2s;z-index:10}
+.modal-close:hover{color:var(--navy)}
+.modal-eyebrow{font-size:.65rem;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:.6rem}
+.modal-name{font-family:var(--font-d);font-size:clamp(1.5rem,3vw,2rem);font-weight:500;color:var(--navy);line-height:1.1;margin-bottom:.3rem}
+.modal-title{font-size:.7rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border)}
+.modal-text{font-size:.92rem;line-height:1.85;color:var(--text);font-weight:300}
+.modal-text p+p{margin-top:1.1rem}
+@media(max-width:600px){
+  .modal{grid-template-columns:1fr}
+  .modal-photo{aspect-ratio:3/2;max-height:220px}
+}
+</style>
+</head>
+<body>
+
+<!-- Hidden forms for Netlify detection — never shown to users -->
+<div style="display:none">
+  <form name="contact" data-netlify="true" netlify-honeypot="bot-field">
+    <input type="hidden" name="form-name" value="contact">
+    <input name="bot-field">
+    <input name="first-name">
+    <input name="last-name">
+    <input name="email">
+    <textarea name="message"></textarea>
+  </form>
+  <form name="newsletter" data-netlify="true" netlify-honeypot="bot-field">
+    <input type="hidden" name="form-name" value="newsletter">
+    <input name="bot-field">
+    <input name="email">
+  </form>
+</div>
+
+<!-- ── NAV ──────────────────────────────────────────────────── -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <div class="nav-logo" onclick="navigate('home')" aria-label="TDS Public Affairs"><img src="data:image/png;base64,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" alt="TDS Public Affairs" style="height:clamp(46px,6vh,58px);width:auto;display:block;filter:brightness(1.08)"></div>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#" onclick="navigate('home');return false" data-page="home">Home</a></li>
+      <li><a href="#" onclick="navigate('about');return false" data-page="about">About</a></li>
+      <li><a href="#" onclick="navigate('solutions');return false" data-page="solutions">What We Do</a></li>
+      <li><a href="#" onclick="navigate('insights');return false" data-page="insights">Insights</a></li>
+      <li><a href="#" onclick="navigate('contact');return false" data-page="contact">Contact</a></li>
+    </ul>
+    <button class="nav-toggle" onclick="document.querySelector('.mob-nav').classList.add('open')" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ── MOBILE NAV ────────────────────────────────────────────── -->
+<div class="mob-nav" role="dialog">
+  <button class="mob-close" onclick="document.querySelector('.mob-nav').classList.remove('open')">&times;</button>
+  <a href="#" onclick="navigate('home');document.querySelector('.mob-nav').classList.remove('open');return false">Home</a>
+  <a href="#" onclick="navigate('about');document.querySelector('.mob-nav').classList.remove('open');return false">About</a>
+  <a href="#" onclick="navigate('solutions');document.querySelector('.mob-nav').classList.remove('open');return false">What We Do</a>
+  <a href="#" onclick="navigate('insights');document.querySelector('.mob-nav').classList.remove('open');return false">Insights</a>
+  <a href="#" onclick="navigate('contact');document.querySelector('.mob-nav').classList.remove('open');return false">Contact</a>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- PAGE: HOME                                                  -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div id="page-home" class="page">
+
+  <section class="hero">
+    <div class="hero-bg" style="background-image:url('https://static.wixstatic.com/media/86455a_d02c9a09262d4a54afb9644e4b70019af000.jpg/v1/fill/w_1920,h_1080,al_c,q_85/img.jpg')"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <p class="hero-ew">TDS Public Affairs</p>
+      <h1 class="hero-h1">Navigating Complex<br><em>Public Challenges</em></h1>
+      <p class="hero-sub">Strategy, narrative, and execution for organizations navigating public challenges — from emerging issues to full-scale campaigns.</p>
+      <div class="hero-cta">
+        <button class="btn btn-gold" onclick="navigate('contact')">Start a Conversation <svg class="arrow-svg" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+        <button class="btn btn-light" onclick="navigate('about')">About the Firm <svg class="arrow-svg" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+      </div>
+    </div>
+  </section>
+
+  <section class="home-intro">
+    <div class="home-intro-grid">
+      <div class="home-intro-img fu">
+        <img src="https://static.wixstatic.com/media/86455a_29463507818944f19fa5ffd627b7e8b7~mv2.jpeg/v1/fill/w_900,h_675,al_c,q_85/boardroom.jpg" alt="TDS boardroom" loading="lazy">
+      </div>
+      <div class="home-intro-text fu">
+        <p class="eyebrow left">When the stakes are high, clarity matters.</p>
+        <div class="rule"></div>
+        <div class="about-body">
+          <p>TDS Public Affairs helps organizations navigate difficult public environments where policy, reputation, and stakeholder relationships intersect.</p>
+          <p>We help clients clarify strategy, shape narratives, mobilize support, and execute disciplined campaigns that influence outcomes.</p>
+        </div>
+        <button class="btn btn-dark" onclick="navigate('about')" style="margin-top:2.25rem">Learn About Us <svg class="arrow-svg" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+      </div>
+    </div>
+  </section>
+
+  <section class="home-services">
+    <div class="services-head fu">
+      <p class="eyebrow" style="justify-content:center">Our Capabilities</p>
+      <h2 class="section-title">What We Do</h2>
+      <p style="font-size:clamp(.9rem,1.5vw,1rem);color:var(--muted);font-weight:300;max-width:52ch;margin:.9rem auto 0;line-height:1.8">We help clients manage complex public issues, build influence, and shape outcomes.</p>
+    </div>
+    <div class="services-grid">
+      <div class="svc-card fu">
+        <svg class="svc-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+        <p class="svc-name">Strategic Counsel</p>
+        <p class="svc-text">Trusted counsel for leadership navigating complex public environments — whatever the challenge, whatever the stakes.</p>
+      </div>
+      <div class="svc-card fu">
+        <svg class="svc-icon" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <p class="svc-name">Crisis Communications &amp; PR</p>
+        <p class="svc-text">When an issue goes public, we help organizations respond with clarity — managing media, controlling narrative, and protecting long-term reputation.</p>
+      </div>
+      <div class="svc-card fu">
+        <svg class="svc-icon" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <p class="svc-name">Stakeholder Engagement</p>
+        <p class="svc-text">Building the relationships and coalitions that move decision-makers — identifying who matters, what they need to hear, and how to reach them.</p>
+      </div>
+      <div class="svc-card fu">
+        <svg class="svc-icon" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        <p class="svc-name">Public Influence Campaigns</p>
+        <p class="svc-text">Designing and executing coordinated efforts that build support and shape outcomes at scale.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="home-when">
+    <div class="home-when-grid">
+      <div class="fu">
+        <p class="when-label">Our Approach</p>
+        <h2 class="when-h">How We Work</h2>
+        <p class="when-body">Our work begins with strategy. We help clients understand the landscape, define achievable outcomes, and build the right mix of communications, stakeholder engagement, and public influence. From there we execute with discipline, ensuring every action supports the broader strategic objective.</p>
+        <button class="btn btn-light" onclick="navigate('solutions')">See Our Services <svg class="arrow-svg" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+      </div>
+      <div class="fu">
+        <p class="when-label">When Clients Call Us</p>
+        <ul class="when-list">
+          <li>An issue becomes public and the stakes are rising</li>
+          <li>A crisis requires immediate communications response</li>
+          <li>Legislative or regulatory decisions threaten long-term interests</li>
+          <li>Press coverage is shaping the narrative and reporters are calling</li>
+          <li>Complex stakeholder environments require coordinated strategy</li>
+          <li>Leadership needs trusted strategic counsel</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="home-where">
+    <div class="home-where-grid">
+      <div class="fu">
+        <p class="eyebrow left">Practice Areas</p>
+        <h2 class="section-title">Where We Help <em>Clients</em></h2>
+        <ul class="where-list">
+          <li>Policy and legislative strategy</li>
+          <li>Crisis communications and reputation management</li>
+          <li>Media relations and earned PR</li>
+          <li>Tribal sovereignty and Indian Country policy</li>
+          <li>Complex regulatory disputes</li>
+          <li>Coalition-building campaigns</li>
+          <li>Litigation support</li>
+        </ul>
+        <button class="btn btn-dark" onclick="navigate('contact')" style="margin-top:2.25rem">Start a Conversation <svg class="arrow-svg" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+      </div>
+      <div class="where-images fu">
+        <div class="where-img tall">
+          <img src="https://static.wixstatic.com/media/86455a_a122d063ddea4adbb9256105aef09871~mv2.jpeg/v1/fill/w_600,h_900,al_c,q_85/capitol.jpg" alt="Capitol building" loading="lazy">
+        </div>
+        <div class="where-img">
+          <img src="https://static.wixstatic.com/media/86455a_5b19616e760e4a15965e7e17869256ab~mv2.jpeg/v1/fill/w_600,h_450,al_c,q_85/federal.jpg" alt="Federal building" loading="lazy">
+        </div>
+        <div class="where-img">
+          <img src="https://static.wixstatic.com/media/86455a_2ee0ba42f5eb40bb9240358b97842f09~mv2.jpeg/v1/fill/w_600,h_450,al_c,q_85/microphones.jpg" alt="Press conference" loading="lazy">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="home-sectors">
+    <div class="inner">
+      <span class="sectors-label">Experience Across</span>
+      <div class="sectors-strip">
+        <span class="sector-tag">Tribal Leadership</span>
+        <span class="sector-tag">Public Sector</span>
+        <span class="sector-tag">Advocacy Organizations</span>
+        <span class="sector-tag">Corporate Stakeholders</span>
+        <span class="sector-tag">Coalition Networks</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="home-posts">
+    <div class="posts-head fu">
+      <p class="eyebrow" style="justify-content:center">Perspectives</p>
+      <h2 class="section-title">Latest <em>Insights</em></h2>
+    </div>
+    <div class="posts-grid" id="homePostsGrid"></div>
+    <div style="text-align:center;margin-top:3rem">
+      <button class="btn btn-dark" onclick="navigate('insights')">All Insights <svg class="arrow-svg" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+    </div>
+  </section>
+
+  <div class="cta-band">
+    <div class="cta-band-inner fu">
+      <p class="eyebrow" style="justify-content:center">Get in Touch</p>
+      <h2 class="cta-h">Start a <em>Conversation</em></h2>
+      <p class="cta-sub">Whether you're navigating an emerging issue or running a full-scale campaign, we're ready to engage.</p>
+      <button class="btn btn-dark" onclick="navigate('contact')">Contact Us <svg class="arrow-svg" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+    </div>
+  </div>
+
+  <footer class="footer" id="footer-home"></footer>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- PAGE: ABOUT                                                 -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div id="page-about" class="page">
+
+  <section class="hero">
+    <div class="hero-bg" style="background-image:url('https://static.wixstatic.com/media/86455a_2d628e49d9ae49cb8e490fe8cae46519~mv2.jpg/v1/fill/w_1920,h_900,al_c,q_85/columns.jpg')"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <p class="hero-ew">TDS Public Affairs</p>
+      <h1 class="hero-h1">About <em>Us</em></h1>
+    </div>
+  </section>
+
+  <section class="about-intro">
+    <div class="about-grid">
+      <div class="fu">
+        <p class="about-label">Our Firm</p>
+        <h2 class="about-h2">Where governance, culture, and public influence converge.</h2>
+      </div>
+      <div class="fu">
+        <div class="rule"></div>
+        <div class="about-body">
+          <p>TDS Public Affairs operates where governance, culture, and public influence converge. Our team brings experience navigating complex political environments, leading legislative strategy, managing crisis communications, and guiding institutions through complex and demanding moments.</p>
+          <p>We understand both the mechanics of institutional systems and the realities of public perception — and we align the two with precision, integrity, and long-term focus.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="team-section">
+    <div class="team-head fu">
+      <p class="eyebrow" style="justify-content:center">Leadership</p>
+      <h2 class="section-title">Our Team</h2>
+    </div>
+    <div class="team-grid">
+      <div class="team-card fu">
+        <div class="team-photo"><img src="https://static.wixstatic.com/media/86455a_1373bd336eff4531aa38d74ab0cad4a9~mv2.png/v1/fill/w_600,h_800,al_c,q_85/1.png" alt="Jim Terry" loading="lazy" onerror="this.parentElement.style.background='var(--navy-light)'"></div>
+        <div class="team-info">
+          <p class="team-name">Jim Terry</p>
+          <p class="team-title">President &amp; CEO</p>
+          <span class="team-link" onclick="openBioModal('jim')" style="cursor:pointer">Learn More <svg class="arrow-svg" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+        </div>
+      </div>
+      <div class="team-card fu">
+        <div class="team-photo"><img src="https://static.wixstatic.com/media/86455a_097ed77b2b8544e7a97e5de6c2d399ce~mv2.png/v1/fill/w_600,h_800,al_c,q_85/2.png" alt="Patty Roe" loading="lazy" onerror="this.parentElement.style.background='var(--navy-light)'"></div>
+        <div class="team-info">
+          <p class="team-name">Patty Roe</p>
+          <p class="team-title">Vice President</p>
+          <span class="team-link" onclick="openBioModal('patty')" style="cursor:pointer">Learn More <svg class="arrow-svg" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+        </div>
+      </div>
+      <div class="team-card fu">
+        <div class="team-photo"><img src="https://static.wixstatic.com/media/86455a_4b51b88a8dd84106a3e904e53f86c244~mv2.png/v1/fill/w_600,h_800,al_c,q_85/3.png" alt="Trisha Guenther" loading="lazy" onerror="this.parentElement.style.background='var(--navy-light)'"></div>
+        <div class="team-info">
+          <p class="team-name">Trisha Guenther</p>
+          <p class="team-title">Finance</p>
+          <span class="team-link" onclick="openBioModal('trisha')" style="cursor:pointer">Learn More <svg class="arrow-svg" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="values-section">
+    <div class="values-grid">
+      <div class="values-left fu">
+        <p class="values-label">What We Stand For</p>
+        <h2 class="values-h">Our <em>Values</em></h2>
+        <p class="values-body">We believe influence must be ethical, disciplined, and built to endure. In complex public environments, clarity and integrity are not optional — they are essential.</p>
+      </div>
+      <div class="pillars">
+        <div class="pillar fu">
+          <p class="pillar-name">Long-term credibility over short-term visibility</p>
+          <p class="pillar-text">Sustainable influence is built on trust and track record, not noise. We play for the long game.</p>
+        </div>
+        <div class="pillar fu">
+          <p class="pillar-name">Strategic depth over volume</p>
+          <p class="pillar-text">Every engagement is shaped by disciplined thinking, not activity for its own sake.</p>
+        </div>
+        <div class="pillar fu">
+          <p class="pillar-name">Partnership over transaction</p>
+          <p class="pillar-text">We are invested in our clients' outcomes — and that commitment defines how we work.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="cta-band">
+    <div class="cta-band-inner fu">
+      <h2 class="cta-h">Start a <em>Conversation</em></h2>
+      <p class="cta-sub">Whether you're navigating an emerging issue or running a full-scale campaign, we're ready to engage.</p>
+      <button class="btn btn-dark" onclick="navigate('contact')">Contact Us <svg class="arrow-svg" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+    </div>
+  </div>
+
+  <footer class="footer" id="footer-about"></footer>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- PAGE: SOLUTIONS                                             -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div id="page-solutions" class="page">
+
+  <section class="hero" style="min-height:clamp(380px,55vh,600px)">
+    <div class="hero-bg" style="background-image:url('https://static.wixstatic.com/media/86455a_2a04ee4eb6204d1b84feab77715e1165~mv2.jpg/v1/fill/w_1920,h_900,al_c,q_85/solutions.jpg')"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <p class="hero-ew">Our Services</p>
+      <h1 class="hero-h1">Where Strategy<br><em>Comes Together</em></h1>
+      <p class="hero-sub" style="margin-top:.75rem;font-size:.78rem;letter-spacing:.12em;color:rgba(255,255,255,.5);text-transform:uppercase;font-weight:400">Policy &nbsp;|&nbsp; Strategy &nbsp;|&nbsp; Stakeholders &nbsp;|&nbsp; Execution</p>
+    </div>
+  </section>
+
+  <section class="sol-intro">
+    <div class="sol-intro-grid">
+      <div class="sol-intro-text fu">
+        <p class="eyebrow left">Solutions</p>
+        <div class="rule"></div>
+        <h2>High-stakes issues rarely present themselves as isolated challenges.</h2>
+        <p>They sit at the intersection of policy, reputation, and stakeholder dynamics — and require a coordinated, disciplined response.</p>
+        <p>TDS Public Affairs works with organizations navigating complex public environments where outcomes are shaped not just by decisions, but by how they are understood, communicated, and supported. We bring deep experience in legislative strategy, crisis communications, and media relations.</p>
+        <p>Our work is grounded in strategy. From there, we help clients bring together the right combination of communications, stakeholder engagement, public influence, and direct PR support to move issues forward.</p>
+      </div>
+      <div class="sol-intro-img fu">
+        <img src="https://static.wixstatic.com/media/86455a_2a04ee4eb6204d1b84feab77715e1165~mv2.jpg/v1/fill/w_600,h_800,al_c,q_85/sol.jpg" alt="" loading="lazy" style="width:100%;aspect-ratio:3/4;object-fit:cover">
+      </div>
+    </div>
+  </section>
+
+  <section class="how-engage">
+    <div class="how-engage-grid">
+      <div class="fu">
+        <p class="eyebrow left">Engagement Model</p>
+        <h2 class="engage-h">How We Engage</h2>
+        <div class="engage-body">
+          <p>We are typically engaged when clarity, credibility, and disciplined execution are most needed — and when the cost of reactive thinking is highest.</p>
+          <p>In these moments, our role is to help define the path forward and execute with precision.</p>
+        </div>
+      </div>
+      <div class="fu">
+        <p style="font-size:.68rem;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem">We are typically engaged when:</p>
+        <ul class="engage-list">
+          <li>An issue begins to attract public or political attention</li>
+          <li>Policy or regulatory decisions carry material consequences</li>
+          <li>Multiple stakeholders must be aligned around a common objective</li>
+          <li>Leadership requires clear strategy in a rapidly evolving environment</li>
+        </ul>
+        <button class="btn btn-dark" onclick="navigate('contact')" style="margin-top:2rem">Start a Conversation <svg class="arrow-svg" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+      </div>
+    </div>
+  </section>
+
+  <section class="core-areas">
+    <div class="core-head fu">
+      <p class="eyebrow" style="justify-content:center">What We Offer</p>
+      <h2 class="section-title">Core Areas of Work</h2>
+    </div>
+    <div class="core-grid">
+      <div class="core-card fu">
+        <p class="core-card-num">01</p>
+        <p class="core-card-name">Strategic Counsel</p>
+        <p class="core-card-text">We advise leadership teams navigating complex public environments where policy, reputation, and stakeholder relationships intersect. Our work focuses on clarifying objectives, understanding the landscape, and defining the strategy that guides all subsequent action.</p>
+      </div>
+      <div class="core-card fu">
+        <p class="core-card-num">02</p>
+        <p class="core-card-name">Narrative, Communications &amp; PR</p>
+        <p class="core-card-text">Public issues are shaped by how they are understood. We help clients define clear, credible narratives and ensure those narratives are consistently reflected across media relations, stakeholder engagement, and public discussion — including earned media strategy, reporter relationships, and knowing how coverage shapes the environment around a decision.</p>
+      </div>
+      <div class="core-card fu">
+        <p class="core-card-num">03</p>
+        <p class="core-card-name">Stakeholder Engagement</p>
+        <p class="core-card-text">Outcomes are rarely determined by a single decision maker. We help clients identify the stakeholders who influence outcomes and engage them in a way that builds credibility, alignment, and momentum.</p>
+      </div>
+      <div class="core-card fu">
+        <p class="core-card-num">04</p>
+        <p class="core-card-name">Crisis Communications</p>
+        <p class="core-card-text">When an issue erupts publicly, the first hours matter most. We help organizations respond with discipline — assessing the landscape quickly, defining the right posture, managing media, and protecting institutional credibility through the full arc of a crisis.</p>
+      </div>
+      <div class="core-card fu">
+        <p class="core-card-num">05</p>
+        <p class="core-card-name">Legislative Strategy</p>
+        <p class="core-card-text">We help clients navigate the legislative process — from tracking bills and building relationships with key members and staff, to developing testimony, drafting advocacy materials, and coordinating the stakeholder engagement that moves policy forward.</p>
+      </div>
+      <div class="core-card fu">
+        <p class="core-card-num">06</p>
+        <p class="core-card-name">Public Influence Campaigns</p>
+        <p class="core-card-text">When issues require broader engagement, we design and execute coordinated efforts that bring together communications, advocacy, and coalition-building — structured to apply pressure at the right moments and in the right places.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="integrated">
+    <div class="integrated-inner fu">
+      <p class="eyebrow" style="justify-content:center;color:var(--gold)">How It Comes Together</p>
+      <h2 class="integrated-h">Shaping Outcomes in <em>Complex Environments</em></h2>
+      <p class="integrated-body">These capabilities are not deployed in isolation. Each engagement is built around a clear strategic objective, with communications, stakeholder engagement, and public influence working together to support that objective. This integrated approach ensures that effort is focused, consistent, and aligned with the outcome being pursued.</p>
+      <p style="font-size:.92rem;color:rgba(255,255,255,.4);font-style:italic;font-family:var(--font-d);margin-bottom:2.5rem">Clarity is often the first step toward shaping the right outcome.</p>
+      <button class="btn btn-light" onclick="navigate('contact')">Start a Conversation <svg class="arrow-svg" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+    </div>
+  </section>
+
+  <footer class="footer" id="footer-solutions"></footer>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- PAGE: INSIGHTS                                              -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div id="page-insights" class="page">
+
+  <section class="insights-header">
+    <p class="eyebrow" style="justify-content:center;color:var(--gold)">TDS Public Affairs</p>
+    <h1>Latest <em>Perspectives</em></h1>
+    <p>Analysis and insight from our team on public affairs, communications strategy, and the environments where outcomes are shaped.</p>
+  </section>
+
+  <section class="insights-body">
+    <div class="all-posts-grid" id="allPostsGrid"></div>
+  </section>
+
+  <div class="insights-cta">
+    <div style="max-width:600px;margin:0 auto;text-align:center">
+      <p class="eyebrow" style="justify-content:center">TDS Public Affairs</p>
+      <h2 class="cta-h">Learn What We Do</h2>
+      <p class="cta-sub">Strategy, narrative, and execution for organizations navigating public challenges — from emerging issues to full-scale campaigns.</p>
+      <button class="btn btn-dark" onclick="navigate('solutions')">Our Services <svg class="arrow-svg" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+    </div>
+  </div>
+
+  <footer class="footer" id="footer-insights"></footer>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- PAGE: CONTACT                                               -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div id="page-contact" class="page">
+
+  <section class="hero" style="min-height:clamp(280px,40vh,450px)">
+    <div class="hero-bg" style="background-image:url('https://static.wixstatic.com/media/86455a_066522bca3c847a194bd5ed903058846~mv2.jpeg/v1/fill/w_1920,h_700,al_c,q_85/meeting.jpg')"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <p class="hero-ew">TDS Public Affairs</p>
+      <h1 class="hero-h1" style="font-size:clamp(2.5rem,6vw,5.5rem)">Contact <em>Us</em></h1>
+    </div>
+  </section>
+
+  <section class="contact-page">
+    <div class="contact-grid">
+      <div class="fu">
+        <p class="contact-info-label">Get in Touch</p>
+        <h2 class="contact-h">Start a Conversation</h2>
+        <p class="contact-intro">If your organization requires disciplined public affairs strategy and measured influence, we invite you to begin the conversation.</p>
+        <div class="contact-detail">
+          <div class="cd-row">
+            <svg class="cd-icon" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <p class="cd-text"><a href="mailto:info@TDSPublicAffairs.com">info@TDSPublicAffairs.com</a></p>
+          </div>
+
+        </div>
+      </div>
+      <div class="contact-form fu">
+        <form name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/thank-you.html">
+          <input type="hidden" name="form-name" value="contact">
+          <p style="display:none"><input name="bot-field"></p>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">First Name <sup>*</sup></label>
+              <input type="text" name="first-name" class="form-input" placeholder="First name" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Last Name <sup>*</sup></label>
+              <input type="text" name="last-name" class="form-input" placeholder="Last name" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email <sup>*</sup></label>
+            <input type="email" name="email" class="form-input" placeholder="your@email.com" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Message</label>
+            <textarea name="message" class="form-textarea" placeholder="Tell us about your situation or what you're working on…"></textarea>
+          </div>
+          <button type="submit" class="form-submit" id="contactSubmitBtn">Submit Message</button>
+          <div id="contactSuccess" style="display:none;margin-top:1.5rem;padding:1.25rem 1.5rem;background:var(--navy);color:var(--white);font-size:.88rem;line-height:1.7;letter-spacing:.02em">
+            Thank you — we'll be in touch shortly.
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer" id="footer-contact"></footer>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- PAGE: POST (rendered dynamically)                           -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div id="page-post" class="page">
+  <div id="postContent"></div>
+  <footer class="footer" id="footer-post"></footer>
+</div>
+
+<script>
+/* ── Data ────────────────────────────────────────────────────── */
+const POSTS = [
+  {
+    id:'how-narrative-works',
+    date:'Apr 21, 2026',
+    read:'3 min read',
+    title:'How Narrative Works',
+    excerpt:'Every public affairs campaign runs on language. The question that determines whether that language moves people is whether it is delivering a message or telling a story — and understanding the difference is foundational to influence at scale.',
+    img:'https://static.wixstatic.com/media/86455a_6b87a9c2b13649f8a91560c1e04ccb8a~mv2.png/v1/fill/w_1000,h_667,al_c,q_90/img.png',
+    body:`<p>Every public affairs campaign runs on language. The question that determines whether that language moves people is whether it is delivering a message or telling a story — and understanding the difference is foundational to influence at scale.</p>
+<p>A message is a proposition. It asserts something the communicator wants the audience to believe: that a policy is sound, that an organization is trustworthy, that a position is reasonable. Messages can be accurate or inaccurate, well-constructed or poorly constructed. What they are not, structurally, is sticky. The audience receives a message. They do not inhabit it.</p>
+<p>Narrative operates differently. A story has characters with something at stake, a tension that needs resolving, and a direction of travel. Audiences do not receive stories the way they receive messages — they enter them. They locate themselves in the arc, identify with a character, and carry the stakes forward as their own. This is not stylistic. It is how people make sense of the world. We process information through story before we evaluate it as argument.</p>
+<p>In practical terms, this means that before a message reaches the reasoning mind, it has to pass through the story the audience is already telling. Every stakeholder — every legislator, regulator, community member, reporter, or voter — is already operating inside a narrative about your issue, your organization, and the broader context in which both exist. That prior narrative is not an obstacle to your communications strategy. Working within it is the strategy.</p>
+<p>The first job in any serious public affairs effort is to understand the narrative architecture of the environment you are entering. Who are the characters as the audience already understands them — the protagonists, the antagonists, the communities with something to lose? What is the established tension? What resolution does the story appear to be moving toward? These questions have concrete answers: what the press has established, how opponents have framed the issue, what affected communities believe about their situation, and what story decision-makers are already telling their constituents.</p>
+<p>Once that architecture is clear, the strategic question is where your effort fits within it — and whether the narrative needs to be entered, reframed, or built.</p>
+<p>Entering an existing narrative means identifying where your position connects to the story already in motion. The organization that can credibly say "this is about the same thing you have always cared about" has an advantage over one asking the audience to begin caring about something new. Many of the most durable wins come not from changing beliefs, but from connecting a new question to beliefs already firmly held.</p>
+<p>Reframing is harder and takes longer. It requires introducing new characters — the faces and voices that give an issue human stakes — and new tensions that replace the ones already established. This is where third-party validators, constituent voices, and unexpected allies do their most important work. They are not simply adding credibility to an argument. They are populating a different story.</p>
+<p>Building a narrative where none exists is the longest game, and often the most important. Emerging issues, novel policy questions, and misunderstood communities often suffer not from bad coverage but from no organizing story at all — a vacuum that opponents will fill if advocates do not. The organization that defines the narrative frame early holds an advantage that is difficult to overcome later.</p>
+<p>None of this replaces message discipline, accurate information, or sound argument. Narrative is not a substitute for substance. It is the structure through which substance reaches people in a form they can absorb, retain, and act on.</p>
+<p>A campaign with strong messages and no narrative produces accurate content that does not travel. A campaign that understands narrative builds something that moves.</p>`
+  },
+  {
+    id:'the-op-ed-as-influence-infrastructure',
+    date:'Apr 14, 2026',
+    read:'3 min read',
+    title:'The Op-Ed as Influence Infrastructure',
+    excerpt:'A targeted op-ed placed in the right outlet still does what it always did — it puts a credible argument in front of a legislator, regulator, or senior official in a format they trust. But in a modern campaign, that placement is also the starting point for something larger.',
+    img:'https://static.wixstatic.com/media/86455a_411b43815e2d463bb895a79aa0ef52b1~mv2.png/v1/fill/w_1000,h_667,al_c,q_90/img.png',
+    body:`<p>The opinion article has always been a tool for reaching decision-makers. What has changed is what a well-placed piece can do after it publishes.</p>
+<p>A targeted op-ed placed in the right outlet still does what it always did — it puts a credible argument in front of a legislator, regulator, or senior official in a format they trust. But in a modern campaign, that placement is also the starting point for something larger.</p>
+<p>The piece becomes content. It is targeted digitally to voters in a legislator's home district. It shows up in the feeds of stakeholders who influence the decision-maker's thinking. It gives advocates something to share, reporters something to cite, and allies something to point to. The original audience was the editor's readership. The extended audience is everyone whose opinion the decision-maker actually cares about.</p>
+<p>This changes how a targeted op-ed campaign should be designed — and raises the stakes on every decision that goes into it.</p>
+<p><strong>The Voice</strong></p>
+<p>The byline determines how far the piece travels and who takes it seriously. The most effective authors are not always the most prominent — they are the voices whose background and standing resonate with the specific audiences being reached. A rural hospital CEO writing about healthcare access speaks to a legislator and to that legislator's constituents simultaneously. A tribal leader, a small business owner, a former agency official — each carries credibility with a different slice of the influence map. Often, the right voice is outside your own organization.</p>
+<p><strong>The Political Frame</strong></p>
+<p>Every issue has multiple honest arguments available to it. The choice among them is strategic. The argument that moves a conservative rural legislator is not the one that moves a progressive urban counterpart, and the argument that resonates with a general public audience on social media may differ from both. A disciplined targeting strategy identifies the frame — economic development, fiscal responsibility, community sovereignty, public health — that fits the author, the outlet, and the downstream digital audience simultaneously.</p>
+<p><strong>The Publication</strong></p>
+<p>Outlet selection drives both direct credibility and digital reach. A state capitol daily carries authority with legislative staff. A regional business journal lands with the stakeholders a legislator respects. A local newspaper reaches the voters back home — and content from local outlets performs differently in targeted digital campaigns than content from national ones. Constituents clicking through to their hometown paper carry that argument differently than they carry a link to a national publication they do not feel connected to.</p>
+<p><strong>The Argument</strong></p>
+<p>Decision-makers are accustomed to advocacy. They are more rarely given something that genuinely expands their understanding of an issue. Op-eds that inform before they persuade — that introduce a data point, surface an implication, or connect two issues the reader had not linked — earn a different kind of attention and a different kind of durability. They get shared. They get cited. They become the version of the argument that travels through the ecosystem rather than stopping at the page.</p>
+<p><strong>The Timing</strong></p>
+<p>A piece that arrives when a decision-maker is actively engaged with a question — during a committee markup, a regulatory comment period, a public hearing — does work that the same piece published at the wrong moment cannot. In a digital campaign, timing also determines the relevance of the content being amplified. Constituent outreach tied to a moment when the issue is live feels like civic engagement. The same outreach, disconnected from an active policy moment, feels like a lobbying push.</p>
+<p>When these variables align, a single well-placed piece operates on multiple levels at once — reaching the decision-maker directly, shaping the environment around them, and activating the constituencies they answer to.</p>
+<p>The opinion article was always an influence tool. In a modern campaign, it is infrastructure.</p>`
+  },
+  {
+    id:'when-issues-go-public',
+    date:'Apr 7, 2026',
+    read:'3 min read',
+    title:'When Issues Go Public, Most Organizations Are Already Behind',
+    excerpt:'The instinct when an issue erupts is to act. What looks like decisiveness often turns out to be noise. And in high-stakes public environments, noise has a cost.',
+    img:'https://static.wixstatic.com/media/86455a_f72509bbfcf749e0940168ef97db30e4~mv2.png/v1/fill/w_1000,h_667,al_c,q_90/img.png',
+    body:`<p>By the time an issue surfaces publicly, the organizations best positioned to shape its outcome have usually been working on it for weeks. That gap — between when a controversy becomes visible and when it actually becomes manageable — is where most organizations lose ground they never recover.</p>
+<p>The instinct when an issue erupts is to act. Leaders reach for statements, talking points, media calls, and coalition partners. What looks like decisiveness often turns out to be noise. And in high-stakes public environments, noise has a cost. It signals reactive posture to the stakeholders whose judgment matters most — policymakers, regulators, and community voices who are deciding whether your organization is a credible participant in the conversation or a problem to be managed around.</p>
+<p>The organizations that consistently navigate complex public issues effectively share one habit: they pause before they move. Not for long — public environments don't allow it — but long enough to answer three questions that most skip entirely.</p>
+<p><strong>What is actually happening here?</strong></p>
+<p>Public debates rarely mean what they appear to mean on the surface. A regulatory inquiry may be driven by a single legislator's political interest rather than a genuine policy concern. A media controversy may reflect a stakeholder conflict that has been building for years below the public waterline. A community opposition campaign may be organized by actors with motivations that have nothing to do with the stated issue.</p>
+<p>Organizations that diagnose the real dynamics driving an issue — not just its visible symptoms — make fundamentally different decisions than those who react to the headlines. The difference between a controversy that gets resolved and one that metastasizes often comes down to whether anyone stopped long enough to ask what is actually going on.</p>
+<p><strong>What outcome are we seeking?</strong></p>
+<p>This sounds obvious. It isn't. Under pressure, organizations collapse "winning" with a range of objectives that aren't the same thing: making the controversy stop, being perceived as responsive, getting their message out, or satisfying internal stakeholders who want visible action. These are not strategies. They are impulses.</p>
+<p>A clear objective does something important: it eliminates options. When you know you are trying to influence a specific regulatory interpretation, you stop wasting resources on a broad public communications campaign that will have no effect on the regulator. When you know your goal is preventing escalation rather than winning the argument, you make different choices about which battles to pick and which voices to engage. Specificity about the outcome is not a constraint on strategy — it is the precondition for having one.</p>
+<p><strong>Who actually decides this?</strong></p>
+<p>Public issues feel like they are decided by broad public opinion. Most are not. They are decided by a much smaller network of actors whose positions carry disproportionate weight — a committee chair, a regulatory official, a credible third-party voice whose endorsement changes the frame. Understanding which stakeholders carry real influence — and what they actually need to hear, from whom, and through what channels — is the most underinvested capability in most organizations' public affairs work.</p>
+<p>Only after those three questions are answered does it make sense to talk about tactics: what to say, where to say it, who should carry the message, and how advocacy, communications, and stakeholder engagement should work together.</p>
+<p>Complex public issues are not won through speed. They are won through clarity — about the landscape, the objective, and the relationships that will ultimately determine the outcome. The organizations that get there fastest aren't the ones who react quickest. They're the ones who built that analytical discipline before the issue arrived.</p>
+<p><em>TDS Public Affairs works with organizations navigating complex public environments where policy, reputation, and stakeholder relationships intersect.</em></p>`
+  },
+  {
+    id:'reporters-arent-your-audience',
+    date:'Apr 1, 2026',
+    read:'2 min read',
+    title:"Reporters Aren't Your Audience",
+    excerpt:'Most organizations manage their press strategy as a placement problem. This framework is not wrong. It is incomplete in a way that costs organizations exactly when the stakes are highest.',
+    img:'https://static.wixstatic.com/media/86455a_ebee97b0df2e4270b15b1930d7942c7f~mv2.png/v1/fill/w_1000,h_667,al_c,q_90/img.png',
+    body:`<p>Most organizations manage their press strategy as a placement problem. The goal, as commonly understood, is to get the story in the right outlet with the right framing. Reporters are evaluated as targets. Relationships are managed as access points. Success is measured by whether coverage ran, where it ran, and whether the key messages appeared in the text.</p>
+<p>This framework is not wrong. It is incomplete in a way that costs organizations exactly when the stakes are highest.</p>
+<p>Reporters are intermediaries. What they write travels — to legislative staff scanning morning clips, to regulators monitoring how an issue is playing publicly, to board members and institutional investors forming impressions about organizational stability, to community stakeholders deciding whether your organization is a credible voice or a managed one. The people whose decisions shape your operating environment rarely form their views from a direct conversation with you. They form them from the environment your press coverage creates around you.</p>
+<p>This distinction changes what a communications strategy is actually for.</p>
+<p>Organizations optimized for placement spend their effort on message control — ensuring the quote is accurate, the headline is favorable, and the facts in the story are correct. These are legitimate concerns. They are also the floor, not the ceiling. The more consequential question is what a senior legislative staffer concludes after reading the piece, what signal a regulator takes from the framing, what a skeptical third party infers about organizational credibility from the story's overall architecture.</p>
+<p>Those downstream effects are rarely accidental. They are the product of how relationships with reporters were built before the story existed, how much context a reporter carried into the piece, whose voices appeared alongside yours, and what the narrative surrounding your organization looked like before this particular story was filed. By the time a story is being written, most of the communication has already happened — or failed to.</p>
+<p>The organizations that shape coverage don't rely on message discipline alone. They invest in relationships early, when there is no immediate ask. They understand which reporters and outlets actually influence the audiences that matter to them. They treat background, context, and credibility as strategic assets. And they know what signal they want a decision-maker to take from a story long after it runs.</p>
+<p>Messaging is what you say. Communications strategy is what people believe after they encounter it.</p>`
+  },
+  {
+    id:'the-decision',
+    date:'Mar 31, 2026',
+    read:'5 min read',
+    title:'The Decision No One Wants to Make',
+    excerpt:'The pressure inside organizations almost always runs in one direction: toward visibility. Going public is not always the right move. Knowing when it isn\'t is one of the most undervalued capabilities in high-stakes public affairs.',
+    img:'https://static.wixstatic.com/media/86455a_8741028823d24175a044dd6a92bd08ec~mv2.png/v1/fill/w_1000,h_667,al_c,q_90/img.png',
+    body:`<p>There is a question at the center of nearly every complex public affairs engagement that organizations consistently get wrong — not because it is technically difficult, but because it is psychologically uncomfortable. The question is whether to engage publicly at all.</p>
+<p>The pressure inside organizations almost always runs in one direction: toward visibility. Communications teams are resourced for output. Government relations professionals have relationships to activate. Leadership wants to demonstrate it is not sitting on its hands. Legal and compliance want a record of response. Every internal constituency has a reason to favor action, and action in a public affairs context usually means public action.</p>
+<p>The result is a systematic bias toward going public in situations where silence, or deliberate quiet engagement, would have produced a better outcome. Organizations elevate issues they could have contained. They harden opposition by giving it something to respond to. They create records of public positioning that constrain their flexibility later. They signal anxiety to the stakeholders best positioned to exploit it.</p>
+<p>Going public is not always the right move. Knowing when it isn't is one of the most undervalued capabilities in high-stakes public affairs.</p>
+<p><strong>What public engagement actually does</strong></p>
+<p>Before deciding whether to go public, it helps to be precise about what public engagement accomplishes — and what it doesn't. Public engagement raises the visibility of an issue. That is sometimes the goal. When an organization needs to mobilize stakeholder support, shift a media narrative, or signal to a regulatory body that a decision has public consequences, visibility creates pressure that private engagement cannot.</p>
+<p>But visibility is a two-way instrument. It raises the issue's profile for your allies and for your opponents simultaneously. It invites responses you cannot control, from voices you did not anticipate, in forums you did not choose. It moves an issue from a contained environment — a regulatory proceeding, a legislative staff conversation, a private stakeholder dialogue — into an open one where the rules of engagement shift entirely.</p>
+<p><strong>The case for staying quiet is usually harder to make internally than it should be.</strong></p>
+<p>Restraint reads as passivity. In organizations where leadership is watching and stakeholders are asking what is being done, the absence of visible activity is difficult to defend even when it is strategically correct. The public affairs professional who recommends a quiet private engagement strategy while the issue is live is making a harder internal argument than the one who recommends a press release and a coalition activation.</p>
+<p>This is worth naming directly because it explains why the bias toward public action persists even when it is counterproductive. The incentive structure inside organizations rewards visible activity. Strategy that operates below the public waterline is harder to see, harder to credit, and harder to defend if something goes wrong.</p>
+<p><strong>The conditions that favor quiet engagement</strong></p>
+<p>There are situations where private, direct engagement consistently outperforms public action. When the decision-maker is already persuadable, public pressure often complicates rather than accelerates the outcome — it forces them to appear independent of external pressure. When public engagement would define the issue on unfavorable terrain, the better move is often to work through channels where the technical argument can be heard on its merits. When the opposition is not yet organized, quiet engagement can resolve an issue before it becomes a fight.</p>
+<p><strong>When going public is the right call</strong></p>
+<p>None of this is an argument for reflexive silence. When the issue has already gone public and the organization's absence is itself a signal, silence is not neutral — it reads as confirmation or weakness. When private channels have been exhausted, public engagement becomes necessary. When the goal requires public legitimacy, a durable policy change may require a broader record of public support.</p>
+<p>The question of when to go public and when to stay quiet should not be answered by whoever is most anxious in the room. It should be answered by a clear-eyed analysis of what the decision-makers the organization is trying to influence actually respond to, what the public engagement would accomplish that private engagement cannot, and what risks visibility creates that silence avoids.</p>
+<p>Going public is easy. Knowing when not to is the harder skill.</p>
+<p><em>TDS Public Affairs works with organizations navigating complex public environments where policy, reputation, and stakeholder relationships intersect.</em></p>`
+  },
+  {
+    id:'coalitions',
+    date:'Mar 10, 2026',
+    read:'4 min read',
+    title:"Coalitions Don't Win Policy. The Right Coalitions Do.",
+    excerpt:'The standard approach to coalition building treats it as an aggregation problem. In practice, it produces coalitions that are wide, visible, and frequently ineffective.',
+    img:'https://static.wixstatic.com/media/86455a_bdc7d6fdaaf3436f9e7a8ed8be6a389e~mv2.png/v1/fill/w_1000,h_667,al_c,q_90/img.png',
+    body:`<p>Every organization engaged on a significant policy issue eventually reaches the same conclusion: we need allies. The instinct is correct. What follows from it usually isn't.</p>
+<p>The standard approach to coalition building treats it as an aggregation problem. More voices equal more pressure. More organizations signing the letter equal more credibility. More sectors represented at the table equal a broader base of support. The logic feels sound. In practice, it produces coalitions that are wide, visible, and frequently ineffective — collections of like-minded organizations signaling to each other while the actual decision-makers remain unmoved.</p>
+<p>The organizations that use coalitions to genuinely shape policy outcomes think about them differently. They don't ask <em>who will join us</em>. They ask <em>whose voice changes the calculation for the specific decision-makers we need to move</em>.</p>
+<p><strong>Coalitions are persuasion instruments, not credibility displays.</strong></p>
+<p>The distinction matters. A credibility display assembles voices that signal the organization has broad support. That has value in some contexts. It rarely moves a policy outcome on its own. A persuasion instrument is built differently — it starts with a specific decision-maker and works backward. What does this person care about? What constituencies carry weight in their world? What kind of third-party voice would cause them to reconsider a position they already hold?</p>
+<p>A rural hospital system may carry more weight with a particular legislator than a national trade association with a hundred times the membership. A faith community leader may shift the frame on an issue that a policy argument cannot. A former regulator speaking in their personal capacity may provide the technical cover a regulatory body needs to move.</p>
+<p><strong>Most coalitions are built for the organization's comfort, not the issue's requirements.</strong></p>
+<p>Organizations gravitate toward partners they already know. These relationships are easier to build and easier to maintain. They also tend to produce coalitions that confirm existing positions rather than expand the audience for them. The coalitions that change policy outcomes often include voices that make the lead organization mildly uncomfortable. Policymakers and regulators are sophisticated consumers of advocacy. They know the difference between a coalition that represents genuine breadth of perspective and one that represents a single interest wearing multiple hats.</p>
+<p><strong>Timing shapes whether coalitions matter at all.</strong></p>
+<p>Most organizations build coalitions reactively, after an issue has already taken shape publicly. By that point, positions are often hardening. The window in which a coalition can genuinely shape a policy trajectory is usually earlier than organizations recognize — during the period when decision-makers are still forming their views, when the frame for understanding the issue has not yet calcified. Coalitions that arrive after the frame is set are fighting the last battle. Coalitions that help establish the frame in the first place are doing something more powerful.</p>
+<p><strong>A coalition is not a list of signatories. It is a set of relationships in motion.</strong></p>
+<p>Effective coalitions are not static. They are managed — which voices engage at which moments, in which forums, with which messages, toward which audiences. Managing the sequencing, the forums, and the message discipline across coalition partners is its own strategic capability — one that requires as much attention as building the coalition in the first place.</p>
+<p>The organizations that consistently shape policy outcomes through coalitions are not the ones with the longest partner lists. They are the ones that understand the specific decision they are trying to influence, have mapped the voices that carry weight with the people making it, and have built the relationships to deploy those voices at the right moment.</p>
+<p>Breadth is easy to assemble. Strategic alignment around a specific outcome is rare. That rarity is precisely what makes it effective.</p>
+<p><em>TDS Public Affairs works with organizations navigating complex public environments where policy, reputation, and stakeholder relationships intersect.</em></p>`
+  },
+  {
+    id:'tactics',
+    date:'Mar 3, 2026',
+    read:'3 min read',
+    title:"The Tactics Are Ready. The Strategy Isn't.",
+    excerpt:"Most organizations arrive at a public affairs challenge already holding the answer. What's usually missing is the thinking that would tell them whether any of it applies.",
+    img:'https://static.wixstatic.com/media/86455a_d300415971f1427da2250b07bfbc75c2~mv2.png/v1/fill/w_1000,h_667,al_c,q_90/img.png',
+    body:`<p>Most organizations arrive at a public affairs challenge already holding the answer. They have a communications firm on retainer. A government relations contact who knows the right people. A draft op-ed sitting in a shared folder. A coalition they've worked with before. The infrastructure for action is in place.</p>
+<p>What's usually missing is the thinking that would tell them whether any of it applies.</p>
+<p>This is the central dysfunction of how organizations engage on complex public issues: tactics get resourced and relationships get built long before strategy gets developed — and then, when an issue arrives, the tactics drive the strategy rather than the other way around. Organizations run the plays they know how to run. They issue statements because they have communications capacity. They schedule legislative meetings because they have relationships on the Hill. They activate coalitions because coalitions are what you do.</p>
+<p>The result is a lot of well-executed activity that doesn't add up to anything. And in high-stakes public environments, unfocused activity has consequences. It signals uncertainty. It dissipates credibility. It moves stakeholders without moving them in any particular direction.</p>
+<p><strong>Tactics are a hypothesis about how to achieve an objective.</strong></p>
+<p>That framing matters. A media campaign is a hypothesis that shifting public narrative will create pressure on the decision-makers who control the outcome. A coalition is a hypothesis that third-party voices will carry more weight with the relevant audience than the organization's own. A direct engagement strategy is a hypothesis that the relationship between the organization and a specific stakeholder is the limiting factor. Each of those hypotheses may be correct — but none of them can be evaluated without a clear objective and a clear understanding of the environment.</p>
+<p>Without that foundation, organizations don't choose tactics. They default to them.</p>
+<p><strong>What strategy before tactics actually requires</strong></p>
+<p>It requires an honest answer to a question most organizations skip: <em>What would have to be true for this effort to succeed?</em></p>
+<p>That question forces specificity. If the objective is influencing a regulatory outcome, what would have to be true? That the relevant official hears from credible voices in a particular community. That a third-party analysis reframes the technical question in dispute. That a legislative ally creates political cover for the regulatory body to move. Each of those conditions points to a different set of tactics and a different deployment of resources.</p>
+<p><strong>The organizations that get this right don't wait for issues to surface.</strong></p>
+<p>They build the analytical discipline to move quickly through the strategic questions when the clock is running. They have already mapped the stakeholder environment in their core operating areas. They understand which voices carry weight with which decision-makers. They have tested their narrative positions with the audiences that matter before those positions need to hold up under pressure.</p>
+<p>When an issue arrives, they are not starting from scratch. They are applying existing intelligence to a new situation. That is the difference between an organization that shapes a public debate and one that responds to it.</p>
+<p>Speed in a public affairs context is not about how fast you can activate resources. It is about how fast you can think clearly. Tactics without strategy are fast in the wrong direction. The organizations willing to slow down long enough to answer the hard strategic questions first are consistently the ones who move faster when it matters.</p>
+<p><em>TDS Public Affairs works with organizations navigating complex public environments where policy, reputation, and stakeholder relationships intersect.</em></p>`
+  }
+];
+
+/* ── Footer HTML ────────────────────────────────────────────── */
+function footerHTML(){
+  return `<div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAARgAAAE0CAYAAAD34CzBAABE2UlEQVR42u2dd3xc1Zn3f+fce6ePumW5y02uyBUMLtgmgIkpodmQQNh02PSyeZdU29nNliSbDSRsYJNNQluyIgmBgG3ARu4F9yq525KbJKuPpt17z3n/mHvHI3lkSfaMiv18P59BRpq5c+65z/md53lOY1JKCYIgiNRhAlAAvMipLgiCSBdqO7+X1osgCKIzMOvVKYFJ+maCIIir8WAkAGaYZkBVlEaqHoIgOokbQM7lBMYOieoPn6ybMX5kv5OWF0OhEkEQ7aEgltR9BMDLAIzE6EdNEhoFJ4zKP0L1RhBER0gpTcaYkFIanQmRAICfOCFdhYWIkAdDEERHHow11YV1VmBQWAjBGJNSSjDGSGAIgmjPg5G2ViSD5sEQBJE2SGAIgiCBIQiCBIYgCIIEhiAIEhiCIEhgCIIgSGAIgiCBIQiCBIYgCIIEhiAIEhiCIEhgCIIgSGAIgiCBIQiCBIYgCIIEhiAIEhiCIEhgCIIgSGAIgiCBIQiCBIYgCIIEhiAIEhiCIEhgCIIgSGAIgiCBIQiCBIYgCIIEhiAIEhiCIAgSGIIgSGAIgiCBIQiCIIEhCIIEhiAIEhiCIAgSGIIgSGAIgiCBIQiCIIEhCIIEhiAIEhiCIAgSGIIgSGAIgiCBIQiCIIEhCIIEhiAIEhiCIAgSGIIgSGAIgiCBIQiCIIEhCIIEhiAIEhiCIAgSGIIgSGAIgiCBIQiCIIEhCIIEhiAIggSGIAgSGIIgSGAIgiBIYAiCIIEhCIIEhiAIggSGIAgSGIIgSGAIgiBIYAiCIIEhCIIEhiAIggSGIAgSGIIgSGAIgiBIYAiCIIEhCIIEhiAIggSGIAgSGIK4VlmyRHIpJS8tLVWllJr1UhljSd8vpeRSSm37xfdqUkrF+j27FupETfUFpZQcACNzu+4QjDF5fQnKEr506VJm2btgjIlly2J10ZnPM8bE5d4rpVSsa0vE/iHQx+o45QJjVRpxHZLQ6yZ2MqZlF/IaukfloqAsi/+t4kLLoCG5HnnqXP1Hhg3IHgxARnTTWVPf/IjP43ZoCpOMg5mGEOAq16PRspxMzyarrkwT4IdPnd83bljBzlM1NZIxdq6dDpwDMPtCnabDg5kGwGepLnky14GulJ2oYb/+z9e2MMYiiaLSxi5UyyZkX+yE7IbNGDMAGACwadehQbdMLhrVHIo+pCpsNGfsNgAYNiDbYX/OqSkYnJ/V+mJO66dbHQngHvvXCoBxwwoAIDogK9uQUr4DwDxd1bDV63HufPq1lzczxnTb60mIFnptnTIppa2CtiCcA1DIGItKKVlnVdJ+r5TyEIAianfXF7phHtNUpRkAv9AY+DAv07f7eGVNxMmdbwwenFmfGAok9MKit4uN5bFwxpgJAO/uPuedMsz/qNupfUxT+EynQ81N8jHTvl8hwABwnjzbKS++TzDOubR0Jum7DVMcDgQjJx2a+mdhaG/6/ayqTTgFu5zdWD8qY8yQUn4cwP9a4mt7eS+mQ2B2AJhkVRwlka8flHZ+3xyK6EfcTm17UzDydlVN4FhRYd7BhJAaQgilt+Vw7FDI8liwo7yyuHBA7uf9HsdCTVVGtBETJISGSIHnLttcm7WtYwE0S1Os0nXjnerGUOmwgqzjifXZXULTEwKzC8BkEpjrjrgnIoSQVm/M2gpPJKpLRVE2ScjXGupa3s/PzzzcphfucaFJtHsppb8xGHnWpfLHnQ7NTinYjai7BzSEHWYmpjd0wwwoXHmxtqFleX6ub3kyz6unBIYEgEgVdtjDOeeK1QAUAFIICMvwhNOhMVXhszRF+VVOjm93c0t4na7LB3bvPpfPGDOtTkrtqWFaKaXCGJMvL9+SEY4aX4XA3kyP81OWuBhWI7fvjfVAHdt1Ky0Px9RUxcc5vtQvx/uOYZjrwrr+AGNMMsZMKSVLGI3qdlRqF0SaYZzHe/vEvINUFO72eZxzAMwZOy7vfEso8hsI43nG2Fm7d0Q3jZZYgqYyxvRQKFQopPKOU1PGJ4QqvJe1l0Tv0K5Tpih8jgI+xzTNLbqu/ztj7K9WHUIIwbs750UeDNFTDUONeTdCxDwbtcDjcvzA5XLt003zR2ebmvoxxgzLo1G6QVzAGNObWkJfcLhcuz1ubbzlscge8laupE65XZ+c85udTucbumGsO1/f9IAV9glLtElgiOvFu+F2aCUBGJzzHJXzH+R7vPsiEX3Z3mPn+9uu/pIlMuX2umSJ5Iwx+amlf3BW1TX/j9/jeoEDmVZDVdHHplok1KcAIFRFmdM/y/+XxkDoL8dOVxdZ+RKlu0JQCpGI3tQLx3MLisL7Kwr/4biheY+0tISfZoy9CUBYOZKUJC6tRiYzMja5H//UxLfzs3232eEQb29guQ9pDQAIAcE5ZIbXdb/bqc1rCkW+zRj7LQCUSqnOt0bJyIMhrkehMVRVGePxON9oDkZW7DhSNcryZnhqxGWN8tGvPut44rPFb+Xn+G8DEO0D4VAXPZp4YtjUVCXL73L8JhCMvHnszJmh82PeTFo1gDwYorcLjQAgfW7HgrGDs/aGQqEHGWMrrbzM1cxgVRibbwSC4f/ndTtvB6ADcFzD9anYou11O+4b5iwYV9sQ+Apj7N2uTEchD4a41oj3wB6Xw+1yuVY0ByPPW0Pa4kp6YCvMMs7XNj3ldTt/jFgyV7tORFsDYCicj87J9K4M6/rd6Uykk8AQfa0HFj6340kp5R92lZ0rtESm041DSskZY2b5yfrhmT7XLywPSbne6lIAwjDF2WCzvs/ORZHAEBQ2xWzWAPB3Y4bnbqhpDI+x8jKdDffZkiVL+KB+7pddDs2J63NRrskBXtfY/NmcHE8FYjN+0zI/hnIwRF9EBaC7ndogTRWl4XD4NsZYuT1tvYPQyAzp+p0uVZ2F2IjR9ea96AC0pkDoN/1zs1Z2VGfkwRDXKxoETFXhAzTNuUpKGZ/j0d4HXn89Nnrk4HxJN5dVtvPqds8FgBaKRE/uOXL6e1ZdpXWtEnkwRN+Fx5K/nGOQANY2NYVvY4yVlUipLG4zV8b2XqSUd3DOZ6bZe4kvh+ignRlJOnuergKx2I/I8bM1X7t1alGNve4qvY+IuJ6QaXr1JIqVUyhwuZVV+06cHXcAkCUll3gy8oUXXtAM01ySrjILIewFiInLIVTDFADQlPgyTBG1/2694jvVATCsa6UMFhMzNRTRfzhxxOC3tm/frnXHlg7p8GAMK87rzu0aWBrvpScaULqmqKcrmWkIEZ/UxdD9SVMFgKGp6sARBTmvLGNsmr1xNmNMlpTEvJeKcw3TVUVJV+7F4JyrAJSobkQNgR0ep/qqDsj9R89smzJmyBEArLGxEZmZmfLwybP98nJy7szP9piNLaGiTK/7NiFEFud8GBDfocres/dqJ/+ZANRI1Nh0ukJ7Zvt2qU2bBqO7DDmlRHUjz6Gp18qcgmsmhBRCoq6pRZdXuQiFcw6nQ4XbqYFzjpiuQG0zsd5M8JBZNz4rw+NyTg1H9d/PW7rm82uWzpMAzEWLYmXIzXI/kODJpbojUnXDrBAS/3Hs1IXVE0YPONDBZxoAHEn8RVlZjX/AEPcsKdhjCud3+r2u/IRO2vaMutppSwDMNEXwQmPgy0VF2RFrqF72qQZkF/jgsaofuT3O/FAoDCXN/ouQ4FJC+DyOgaOG5H8VqRtyFAB4dW3TC6cvNJ3QFHBIpH+ZOwPXTYi8DM+nhg7IGZsKL1BKCcYY6puDeLN0z1xTmieFqXGu6Fd0Px6PF+OG5WHauGEAgJrGsFuR5kN+t8Md1vVH3E5HgUNTc9qIDUP3eLMqAMOpqZ/68zdu2sEY+5WUUgNg/nVDmR8S91sPN2ULjYSAyTnUiCFeWbvj6A8X3Dz2hFXvidspiCSidskWFoyxZgArAawsWbk/Z+qEfvMG9su+izN8wunQvFdYnwYArS4Q+vHg/Oxd6R41SmaANsL6eVZK6UiopF5PfShU2OYerhbD+lncE/ezp/z0X9qU44oRIlYlNfXN8levrB6W7rJv2FE2UEq50DTNX7YEwy1t6tSU6UdIKaNSykB1deNo24YrKi4M0g1TpMNO6psCzya0J/VK1/fYm0O1ndOzcW/52GjU+HvDMA90sT4NKaWsa2zZAQDWeU0sxfqhWj8/bn2nnmC3f0h5CFBaWqr6/f5uEaaMjAze1NQkQoFIXpbLlY6vyNm+fbuWm5ur1NbWpj0hZn+PpjFnOq7vcSkOKSV7/XXwRYtS5pHFe1POmTF72rizAM4CWL7ncOW/Dx+Yt0Dh/Jset6Pt5k3pshG7PN7sHN//AJgnpcTRyuoHVYXbSdhU2L0JQDGE+H12hu+rtqd0Nd6BFQWYCZ07t35fDqB806ZNf5hYPOUTLqf2DU1VJiR4KMlyNAIAN01x3ql67u2x7Uj7sgdj9xRV9YHJafJg5ljfo3TT/SgAsP/ImbfT4cH8pqR0FBDbAyWN92D3wvE6W7SkxHG+tukLumGWJxQtrd6MacbqLhiO/oNVrn+0/hRNkZdkGobZeKKqqiBhW8q0sCSWsI5ff/ny5c6WUPQLpinLk9hsq/9vDkYWp9OGO/JgaJiaSK37YO0FyxgzlyxZwqWU6uvLFkcLcjP++3RlxWRdN79hmGYEF4dk04I1omWqCv/n8vIzebUNgeEJHs5V5l2ECYArCn91eP/+5xE7fSBt97KMMZGwv666cOHCiNft+O9Vq/ZMq20K/NqqTwUXRz1NAEooqr/u9zhLUrmHTpefAzUJIm0NY9kyYYUMrLS0VB0+fHjY4VB/YRrGpFBUP5rQKNIVKkFTFWfBoOyfmkLcYcUNV92TWycmoCkYrbW8/G7x9C3xNmzPYcGCyS15mf4vmoYxqbElvAEXpzfIcESvP3o++KQdGvWUDZDAEN0S/c2fP9+I9cClqsvlOrT9wMmZAJ61GoWepu9VAMhMn/tTeVn+EZbBp0wMTpyu0hhjcseOHT3hKRp2aOZyuQ5l+dxzztU0fl83zGYAal1z+NPFw7LqE3I7PQItFSC6NXwCYFjzMGoAfE3XdVNV1W9Ynkw67JEBEJyzlHemisp7Q33Gd/hjjP14z+HK1cMG5U0e1C/jTWuiodmTZSSBIXqiYYiEs56/qZsmVM7TKTJpUYIRA/uZvWEgxN5qobRUqpOK2BYAW1gPey4UIhG9oVGYUkpNU5Rv6rrxW0tcjL5yDy6H6utNx93On8+MkpISRUqp9pZCkcAQvcHFV/66at93dcMsx8UjN3ozsTOdpHxs69aDuYlhSk+zePFis1tn6pLAEH3Ak8HihVNrzp1tfFg3BEdselavLjYAU1WU3OLJo39o3YO6ZMkSak9JlJggelpkTGuNzIG6puB3sv3uf7WSk0ovbzumy6F+9VxtYwNjbAlw8TB4eqrkwRC9C1NKqby84fR/AtiANE/ESxEKALMgJ+OHwYj+zEt/3pgfO+42NnOWPBryYIje48VIKSW+trAo8vlo9B/dmrYRfWMzbgWA4XaoX33k3ptuf6A58i8/+9mbrzPGopZHE19R3ZsSwuTBENdtqOTWtM2mKd7tI16M3VEbDk0d7/M5Xvne9x/cZhjG53afPDfcXjZhnz1kva6bdkcCQ/Qq1qyJeTOBcOgXfTAaEIgd0VqsKMpvJgzut1vX9ecaA4GFp06dyk4QG2GvKyop6b6D6ElgiOueefNgSinZhl3Ht5pCHAfAhYDsQ+3JXvtjqIqSoarqFzO83ncGDR68x5Tyr2drG546Wlk92l5XtHhxK+9GLSkpuaaOUaEcDNHbwiQppVTvmVNcH45Gf6dw/s+cp22GbzqFhiNhZbPC+RAAQwbkZH5MzzCDEV3f5lDV5edqmrcGzZYyxli1/eGEvWAYYrkbQQJDEKlDSClZIBp90wl8H0BfPYExcTP6+LaZmqp4AMwFMHdAPz/CEVdLNGqsrK5vPuTzef/KGNuGhNwTYwxCCLUvig2FSERvRDLG5IodVcfCEb0RABOiz9+THT4pCZ6NDgAup+bVNOWhQflZ3830aB8aprm7qSX8ckvUeHLrwWNF1r7Khr2G62q25SSBIShMssKkA+8OiTDOVgEA531iNKkrno0CwD59QyK2BssAIBXOJ/k9zsc9mvL81NHD9rSEImuaAuGna5ubJ7LY5lOG9bPbdlskgSGuOS9m2TImIhFzR0KjvGY1FRcPYGNWOGUCMFRVcXlcjrl+r/NfszzefaZprm8JRb9y4uyFcZZnY+/h2ytHo0hgiF4rMACQ4XOusP59PdmqHU6pCeGUyTkD53y2x6U9OyQ/e0ddU8vG+qbww0uWSN5mrg3rTTdCEL2WCxeC/jR6L0Kg1w+B2+GUYq3/NAEYisLd2X7PzCy/8/WlS7GlprH5x4crLwxOEJpeMYBDAkP0Wg9GSsnWHTx1OmqIypgaiFSLAbe20OwT82xYTGbjno0Qwj5a9sa8DN93hw/I2tvcEvnX7QdPDkjYUrNH2zgJDNFLGxOTAPhDc8efc6j8CADGOU/VWJIAgJZQ9K/1zcFzlpfQ11ZAMx47wNreP8dQFSXb53E8PXHkwH019c0/sibziZ4Mm0hgiN7uxjAAjhRf1gQAr9uxYu+J8wuaW8ItSO/m493Rju18jeF0aLl5Wb4fhHVjayQSuSEhbGI9UTCC6O2eTFpCGBPoP2/SyH17Dp2ZKwRWIDZsbKL376jXbnW1EhpVuUlR1J1Rw/jHF97a7mGMydLS0m7NzZDAENctChCVUvI500btWLcO94Ui0V9aOQ7eB0OmZEJjKgpXNEX5tyfuvOF9KaXfOj6m2+bOkMAQ17mDxMSJE9I1bx5Mj8v51UjEuFsI7LUbqIh5NH11HxdFWvkll9MxE0Dpxt1HFljbYnSLyJDAEL2a7jg5sbAQdo5Cc7m05WfONM4PBMP/rptC4RcPlu+TQmNVnCoETADTiouGvPPB9rIFjDGzO8IlWuxI9HYXQ0op9W76Lt06x7kOwNO7y8+8PXJwzjedDvV+TVPtHt9M6Jz7zOxizqEA0H1upzbzhpG/klJO55w3WoezpU04yYMherPnIkre3DI8rJs3AJBCpNxeZRKRsQ+Z55PHDtrg97kfPHH6wi0AfqDrxhlcXLBoD233Jc9GA2A6HdoowzBXPP/mNg8Als7RJRIYojfnR+SMmWNzXZqSZ/XCKW0IzS0RR3teU8LKZT5mxICtjLF/3n/yxJTK83X/GI3qpUKIoBUBJIZQfUFsFMTWON3yiY9M+K61/UPadIBCJKJXMzQvM5yGRssEII+ePn8WANasWSPbERpheVPcErwaAD8B8JOGUGikT9PulMBjjLGbFc4Tk6aGEIJxzpl1Dncv8w6hMgbT53F970x1/V8A7LJCw5SvWCcPhui1aQMAOF3d8AgurjBOVVikciA6ZcywtwBg3rx5ZgeulLBDp9LYXiwsy+0+pqrqrzVVnR3U9eJQRP9WJKq/b5oiBEDlMcGxxcW0wqle4d1YeicByILcjO+nMwdDHgzRq/MwQoh+7eVLroaobmhVTVFH1xoms/dtsb0ajtgucwcBHATw8/KT54bnZ2Xc7XJpU5yachNjbCJjrO2QsIGLSeKecm9US/jujUQikxlju9PhxZAHQ/RWzAMHDmimkHNTbKvCUq/VWz44UWM1qi6LV+LGT1JKLktLVSklG1s44EROlvdXHpfjs4qi3BAKGdPPVNUvMU3xp0jUaEpo3LxN7qYnZg9LzrmqCyxJ1yFxJDBEb/RcFMaYzMwbMlVTlSKr8aXKViUAMK7ULV48MZoKD4IxJtj8+QZjTC5ZssTe0lKRUjKv17FjcEHOj1RVWXSmvraoKRi8ORiO/ktzS+iIbpjNuDgqlbhJuOymelYBSE1V7vvY4s+NtMJATgJDXBf4vY6HcHG1cMpSEABkVDfeSUfotWzZMtuzsSfv8dJSqUop1ZEFBVWZXu9Wr9v5vQyfZ8yBozXFtQ0tnw1FzeUidkSLvfcLA2AIkV6vxsoPCYeq8H45ngfToQmUgyF6I0JKyXXDvDdNHSGLhMzj3XEj1kiUPRpl51w4Y8yYMm7ASQC/A/C7Y8eOZQ4cOHR6xNC/4XM7ZysKz+SxuxZCAJynzRmQEkBetr8YSP18GPJgiF4ZHtU3Be/RVGWUFTKkMjzihinOb9h19GirnEz3iI20czcAsCQ2z0aRUiojR45sdLu11Vl+zz0Hjp+dCODTQoitALglLulafKkwAELIBaW7TmbaG1WRwBDXLHOXlKqqypdY4UIqHSMBgBmG+cHHbi+usuao9NjQ8TJr+Dth9rAipWSTioacZoz9QVH4LcFIZFHUMLfj4tG0aRFEj9uhzptcGCYPhrhmsRbfiVe/PGmh3+OaankvSorNXTCFvZ5wemKvwPJu4htDxRLFgNfl+tN3X1s970JD4F9N2erEyJR9dSwME+7jZ2pnp1oXSGCIXsO8efMkY0z2y/L/AKkfSZEAFNMU9RWNjR9YnkuvPGvJPrfaPiXgP55Y0NIv2//dMxfqbwVwDKmdeAgAgnPuGJSXMSFBdEhgiGsu92LWNQSedqjqdKsBpTJEMgFIwzDfHZ2bG5BSqj0ZHnVBbOzwyTEsP2f96araxy2xlKkuvNOphShEIq5JcQEgKs9dmJHhd38fqZ33kmjrrDkYLrFGdmSScvTK7RcsjyYqpXQMKcjbYgjxr4htJmX2dj0ggSF6Wlw4Y8xcvPh17vd6/qJw7k21m24dd8LCUaNq/Y6yDfZWEInvKSkpURLyH721XRhSSqZy/gsAzTz1+ZiUQwJD9KS4MABYVFKi/PGPD5Vk+t0DhRBmqu2Sc24CYJGI/syDd8yoBRBfHlBqHVD20Xs+9mgkEvl14lEfvbHKGGPylRVbI4FgWKIPbHhFAkP0ZFgEtnQpfrvw3j9xzh8EYPLW2x6kynvhpimqjKj7OUvU4qHFPEAsWfJ7lzDNf3A4HE+1hCJrL7S0DLJyH1pvCpvspO9bgYoWVVGWW/cnSGAIorW4qIwxc+nSpSzw9Pf+lOF13Y/YmUQp9xos74UbhvlMXh5rSvRerFBIfvlbDxX6PM7JAHSPy3FrtsuztvJ83eOMMd1u1L0pJfP64sWmy6lVWfdHIRJBAIC1EFBhjBmrNpcX/+AHP3zT69IesMRFS/X3JXgvNdXVwRcsQTFbOwVMeh2ub1sNlcW8KIwc3D/75XA0+sPS0hMuexHgkh7Ozdje17//doO/rqklHcsoUi5WtBaJ6K6GoTDGjGXLlqG2IbDA5VD/T1F4JmJT4LV0fK/lvaj1gdDPhw7NqrPELb5LHWPM3H+kYpRDVT5uNS57oaEAIJ2atuzWeYV3VtcF/o0x9nZCaCd6aoibMSbPnZMiw2v2t3+Vqmufr210pPwZkPkT6aKkpESx55swxowzdXVDwxH9lzmZ3pUetzPT8ibS1cmZAFRTiJ1vrtn9XElJiYLWI0cMAAYX5H1XUbjbEhiW0C4UAAYHZvXL9v6tuSX8P4dPNYxMmG2r9MBOmIqUkrm8wTtURXFY93i1pbCFNVBdE3jPdv7IgyF6q6diT8EX9u5opVv2DC4aMezreT7f5x2akmEZMEtHzqWNqx9pamz5+ufun92cuLGUnXspO14zxuNyfDL2K6kk2TvX3vUNPo/zM4WDtMW1jYEf5WR4n2GMRRM8Gml7RmmuW8EYk6Go/kMAmhBCcJ4SH4EJAVY8dtDpVIdKJDDXEQ5V4SUlJUp9/Q5eUlJyhT3fIixadKmBWo3M3ixJAED5yapZg/pl3cc5vuBxObISPIt0J01NAGo4avxnTk7G+u3bpcYYSzxbiTPGjGA4+rSmKioAgzHWXluIn4ekKdyXk+H9iRDiiUjEeObsWeUVxljYEgD7TOiUh0+WiDHGmFHX2PIbl6ZOQepG3CQAFgiFK15eviXlR5iQwFw33gVQebKm+fvfXGxv0Zhyth48nZvlV0YVDS6YJQTuYBx3JVirgYu7t6UNq1fnEd044HKo37E8Ez2xsTLGjOr6wBSnpjyK2N4zaid2/lesxig55xMdDvymsBDfqa4PrGwKBH/BGDuS8B2JixKFnTvpordif2fcE7zQ0PLf2Rmez6VYpAUApnK2/suL5we+FKsLgwSG6NqDVjlumTV29ta9J04zK4lwJdbid7vRPycDfrfKNU0TxysvTCkckncTBNRwNHqv26llAIDludsNjHeTrUnOudQNodQ2RJ4YlK8ZyWbllpTsd3hd6ouccxcAswvHitghoL3UYES/LO8XczLcn5JSvtEcjPyl+lz9BsZYdds8hpRSAyB37NjBpk2blmypQnwD8IQGbgBA5bma+f375TytKfzONHiAHACrqW9el+rwiATmOsBuPNl+D+bfNL4k0ZpTwYgheXEz9bjigxA6AC4lFMbQnXNIBADlbE3jDwsH5uxsu0u+5akYFefrfuxxOW+wGrB6hY3S/j6hcO4B8Jjf43zMXdivqrE5VAEmS85VNx0ZM7z/B199dkWUMRbpymM7fboxx+PX7nZqymKP23F3gneWyvqUiJ0RVWNw4/1kSyhIYIjOW216NiuSCb2ebfxaTNy69fZ0AJppmj8oHJjzz7KNq28NSxtNTbKfxyP+HqlZrZ0YCpkAmKoo/TN8Sn8AN2YMdwNA3T99Zm7Ds1+VywWAinN1yPC5/5jjdzdFLa/FAYhDx8/fNHRowRS3CrMpEJrj8zhHcM4zE+o41eISz1U1B0KbRg0YUC1THB6RwFx/XPW0z166+MUAoJ270Lh5YL+sfy4tLVVZQp7JzmkseeEtj9tj/k1RlAwBCJ6622F2WxKAhBCSc26HhjmZPk8OgC9zAIUDcgDgywCQOOlkzIiC+L8zfO7E+2JpzF0xISCExM/SER6RwFyfXsy1hgFAbWwO7d5Qdvxj1miOQOukqsoY01taIt9RFWUGYvNb0mL7HGDgPHG3PJmQi0IbT69teCetUIjz2DXS1j6FENYolHgvJ8OzIV1Hx5LAEH2ZKABHIBTZceJY1e2Lb53aIKVkiSM2UsaGqE9XNzzq8Ti+b3+mmzW9M9tzxkUnRXNbLi+EMQGDaZo/SueCThIYoi97Lo4LjYFduw9VLrhjxvgGa08Xs03eRQ+FQqNcLtfPkN6Zw30JE4ASiZrvuZzaJinB0+G9ALRUgOh7CDssMoT4yUvvbbz9jhnja0tKSpTFixe3EhcAcu/Rs9O5ou4FMEgIwcjmL263ebji/FKAJSbpyYMhqOcFwEOhyPc8Hte/ALFV2oni0srNCYV1gJUCWMg55yKWgGXXcR0aADQ9Gv188ejBm9OVeyGBIfpar2sA0ExTnK1uaPnawLyMP1kJXTPZOqCE3+0BcHdzKPJTn8vxJc65G1c+/6Vvu34CJufQgqHoCq/H+dt0iwuFSERf6XEZAC0Yiq4uP151hy0u9tEel/vwkiWSSylVv9v57VBIXxAMR6stcWk7snOto3MOBcDbHrfjY/a2E+n+UhIYonf2tjHjNwGokagerWsKfMvrcd4+sWjgwa5MCFu2LHZUq5RS8Xgc63cfqrzhQmPLn3BxZMe4DoTGAKDVNQXrXn7vvUettVmyO/a0IYEheqG2wLR2zFciuvHyyeq6G3Mz/T+XsbOc+ZXMNmWMmSUlJcqsyaOq+2X5FoVC+sxQRN9jeTP2TnfyWqpIa7WZDkAN6+bOTbuO3v/JO+8MJm68RQJDXBc5Fus0AftEASUY1neePFvzCZdDe2LskIK9ltcirqZhLF68OH4GtMfj2Lzqvb0zg+HwU0LgMC7uZndNeDRCCMEYTACabppvuzTlpnvnTVof01rWbSdaksAQPe2tGACYtc5GCYX1fdX1TU943Y7pwwflv2YdCM9TtUbGPgNaSsnvu2960Ot2v8A5Jp+vaXghFI6G23g0fVFoJGJ7xXAJKKGI/u0f/9NfHrLuuds8FxIYoseMP8FL4ABUIYQO4LWqC02f/PrXfj+tf07myxe3pWRmOhqFdfYRszyj0ID87Ke2HjgxpbYx8DMhRLnl0XDEjgUx+kD4ZI+0McTO4N5x4lz1Io/L8bOlSxfp1gznbj+Lm4apiXQbfeJLRcKU+EhUP8kV/uv65vB7/bN9uy/mDuLCktYGYSU5DWuqPGeMlQP49uHD8vsFg8KfYWDf8nmcIxM6YiOhY+a9qH5NxFawq7phNgRC4Z8/8x8//fGyZctEwlB+jwikeg0ac2+7VioaZ18Jd+yyJu7IFp/UZpqmCbBtwYheFgqHS/5r+aZNyz65sMkWlVijv7iDW3dhNT5ziZR8aUxoIgB+fc+SF1587eknbtYU5ROc8YWaqgxI+JidFLZHo1g32oVoU788FI426oZ4vrox+NzowbmVjLH47n09aRTXksCwFD7k7jSYy91LT5ejK1yyQlg3zCZNVU43BsJlHrdrQ8XZmlWjhg7Y36q1WKufe8J9b8syxsSy2Baa9jErQf+yJz8A8EHp9vK8kYPyHx2QnzmGSblQUZQRSS6ho/XCxqu1SdFGVBRcPPEAphBRwxA7A+Fwyaa9h/5835zpFd3pAV43AqNpcTcxVef12lPSe8p7MBNeSm+ue9MUCIQicDnUUqdDa2pqCQtVZS95nM5Q+fELx4vHFBy/pAtuvUG20dvuqW3oFPsVuwDgVwBQsn//tz46csytTc0tn8jyu0aoqjbLoXIVyc93MtrpQJJ5Jm3fo7QVcMMUhhByDeP4W8Q0V/udzgOJ9bp06dJeIdbXhMDYyb+zJ0+WZU+YMCLFbigDUGV9j9lN92MCQFSyzwJwp1Aw00ZU4XLd7uPsvjkTK5JWZJujTBCb4GX0EfuyO6744XFW+aMAVlkvnKkLDpVM5OR4XfdJ08wwDPFwhs8FwzC9qqrkXbH7IkQF51yGwtFtbpdj37nqhgMuv3NbjsdT0aZ+FUtYep9YJ2z+bBvzOQCFjLFo2701CKJdRb64k35ibyy7e1i0m+41MXxNkkBdpEhZIles35U7afyo2QNz/dJ6v6xtCgwNR+VCSFM6NZWZphRcc/BIOLR1cH7WLgNgKiCPn6nRdzRUv7dowgSjbR0mfH+P1689q1pK+XEA/4vWu/C9qF5jBp4WD6mHDLjPrPhdujReV9fF2p5EzybR9nYAyjTLQ7M2W68B8EaSSzxzBbatJHiAAmk6eoZCpF4mBmk0YPIc+57tiYTIAACwZg2UefMum2tpLzeTeKZSnxVvmgdDEGlwQhPOWjKu54qgmbwEQZDAEARBAkMQBEECQxAECQxBECQwBEEQJDAEQZDAEARBAkMQBEECQxAECQxBECQwBEEQJDAEQZDAEARBAkMQBEECQxAECQxBECQwBEEQJDAEQZDAEARBAkMQBEECQxAECQxBECQwBEEQJDAEQZDAEARBAkMQBEECQxAECQxBEAQJDEEQJDAEQZDAEARBkMAQBEECQxAECQxBEAQJDEEQJDAEQZDAEARBkMAQBEECQxAECQxBEAQJDEEQJDAEQZDAEARBkMAQBEECQxAECQxBEAQJDEEQJDAEQZDAEARBkMAQBEECQxAECQxBEAQJDEEQJDAEQZDAEARBkMAQBEECQxAEQQJDEAQJDEEQJDAEQRAkMARBkMAQBEECQxAEQQJDEAQJDEEQJDAEQRAkMARBkMAQBEECQxAEQQJDEAQJDEEQJDAEQRAkMARBkMAQBEECQxAEQQJDEAQJDEEQ1w9qe8IjpeQAmJRSUjURBNGRVnRWYCRjLEz1RhBEJ4gCgJQy2lmBUaWUIwHoliqRB0MQRHsoAEwABR0JjO3i5AM4RPVGEEQXYAmaYl7Og7FViSAI4qpoT2AoLCII4ko8mE4JDKP6IgjiaqF5MARBkMAQBNH3SBoiSQDoYH4dY12LohLn63Xls/bnOvOZzswJ7Gq5r6Qc6aqLZM+o7bVSUb6euJ/OPr+uPtMruWZ32fbVXKez95Uqe7W/jXXxukkFhsWu0OGHhRAxN4jztN1oVz7X2fd2pdypfFCpMkIpZazs7QiKEKJbxSZV35OO8nZHHfTE/XflvVdi74l2xhi7JCnb2WsmFZhoNAohZLsaw7kCTVPjF++od5dSIhqNwnaMNE2FonQ8Eq7rOkwzdiOKwqFpWofvvVy9cx67xsVyx3yBjh5W4rXta1yNQESjOgDZpbqwH6r9wA3DQF1dPerrG2AYBhxOB7KzspCdnRW/nv3+dNPQ0Bg3uKzMTHCl699pmiZ03cCVtFWHw5H0GXZkx8mfT8e21pampmYYhg4JIMOfAU1Tr9AuLk6GTbTT9tqo7DDK4HA4tE6308Sy2B2UaZqoq6tHcyAAAPD7fMjMzIDD4ejUNdVkRvz8C/+DiopKOBwOyEtGrBkcDg1ejweDBg7E9OlTMGZMUauCtS1oMBjCf/z8GYTCYUTCESx6+AHccsuMdhuA/blXXv0jDhwogwQweXIxPvnYo5d8h32Nl1/9I/bvOwC32w0hBZINhGmqCpfbhYKC/pg+dQqKiyficgNm9ne99MprKDtYDgmJqVMm47FPPHJJOTpjQIwxNDU14z+feQ6RSBjhUBiPP/5xTJs6uVNiwDlHdXUN1q7bgH37DqDmwgUYhhHvaVRVRb9+eSi+YSLm3jobeXm5aRMVu7zHT5zET3/2C6iqgpaWIB5Z/DAW3PmRToub/b49e/bhpZdfg9fnscSq83X71a/8PQYU9L/kmcTt2OmwGgLrsH6DLUFMnz4Vj31i8WXvwf6u6poa/Mu//BS6YSAUCuGuBXdg8aIHO20f9vvOnTuPZ375aygKhx7V8dSTn8XIkSOSlsEwDDz7q+dRdb4KmqYlaaNW41ZV+Hw+DB40ENOmTcHYdtppsvIEQyG8//5q7Ni5Gxdqa2EaptXRK8jKysTIkSNw84wbMWH8uK57MPX19aiqrobT6Wy3MEII7D9wEKs+KMWNN07DJx/7OPx+X9L3SylRc6EWwWAQ4XAYoVCo0z1jVXU1JIDGxsYO3tuAqupqeDwxA02m7na5yssPY+3a9Zhx04349Kceh8vluqwK29eWUqKhg3J0pkHV1NQgHA7H66OjHtUu1vLl7+Lt5SvR3ByA0+kE56zVvZqmiTNnzuL48RMoXbMW996zEAvuvL3LYtgV1qxZh+bmZvj9fkgpsW7desybNweOLnp54XAY56uq4A/6WgtMJ4ptGEbS39e1sWOAXfZ6nHMEmgNoamrqtDCs37AJNRdqkZHhB2McmzZvwV0LbkdGRkaX6l03DFRXV0NRFESj0VbeTNJ7q4vdm8PhaGUjyeztwIEyrFpdiunTp+KJxz8ef1bJ2iljDKdPn8Fzz/8GlRWVcLlckFLCFALMEpiamgs4c+YsNmzYhClTJuGB++/D4EEDk7Yh3p7yaZoGTdOgqrFQiHMOZrnnQgiYpoDL5YLb7cbGjZvxy+d+HW8syRq3pl28Zmfd9rbl6Ox7nU4HvF4vvB5v7Kf1UhUVhmHC7XbB6/Ni/YZNeOmVP3ZoBF0pR2ewr6Vp2uUTlNZ/pZT4n9+9hFdf+z+Ypgmfz4OoHoWiKCgo6I8hQwYjJycHhmlCNwz4/X4YhokXX3oVf3jxVTDGkMpF8bbHdKG2Frt27YHH4wEAuFwuVJ4+i92798btpCs5hcR6URQee/GOX+26522eW6eupyidCiE45wgGg9iy+UO43bEOyul0oLa2Dlu2fNjlBHPb+++aTSqt22irdmrC5XJa7XQL/uv531oheuvy2f8OBFrwX7/+Dc6cOYuMjAyYpons7CyMGjEchYXD4PV6EY1GoaoqvF4v1q/fhOUr3rVsrJMeTEzJOELhMGbeMgML7rz9YuIQQDgSwdGjx7F27XpcqK1FdnY29u8vw4qV7+OB+++NvzdZ0qgrlR7/TCcelq2+oVAIN944DQ8/eD9MIcATyhGJRHD4yFG8vXwlAs0BZGVl4sNt27Hgjo+gsHBouz1OYtlT0VA7ey0pJThj+OP//QmrP1iD7OwsRCIRKIqG+++9BzNmTEe/fnnQVA0toSDOnjmH9Rs2YcvWDyGEhNvtRuHwoWkZNWKMYcOGzWhobITf70ckEoHD4QDnDGvXbcBNN067Aq9JwjRNOBwOPPn5T8PfSS8gP79f0t4z0d2fPfMW3HnnRyCFAGung2MATCHg83ovm8C0r/vhtp04X10Nn88LPapDURRomgPrN27G/HlzoXYxF9MVG7PLEA6HMffW2Zg/f24snGIsHjBFIhEcOXIUpaXr0NDYiJycbOzduw/r1m/A7R+Z36qd2qK5ceNmVFRWIjMzE5FIBA8+8DHMvXU2MjL8AIALF2px6NBhrF2/AQcOlmPo0CFY9NADaG9cSO3Inc/KysSwoUMu+duYotGYectN+Ol/PIPq6hp4vR5s2foh7lpwR1zRewIhJDweT9zo2jJ06BDk5/fDs8/+Fxhj0KM6TlVUXFZgeuY+YrH3/gMHsfLd95GVFXvg/gw/vvLFJzFixPBW7/d5vSgqGoWiolG4ecaN+O/f/h533D4f826dk9L7kjLW8EKhEDZv2Qqn0wnTNHHrnFnYsXMXTNOBQ4eO4OjRYxg9etQVJZo5Zxg+vBBeq6FfLeZl7PhKR3tM08S69RugqRr0iI5Zs27GgYPlaGxqQmVlJfbs3Yfp06emPdEuhEBOTna79zamaDSmTZ2Cn/zsF2hpaYHD6cS27Ttw2/y5rWzC/vfBsnJomgPBYBCTJ0/Cvfd8tJWg5eXlIi/vFsyceTOWr3gXAwcMQE5Odrs21uGdG4YBISQM04QQ0noJGIaB7OxsLLjzdkSjOjRNQ21tHWpqarrsHqaj0qWM9YaJvYJpxlzGkSNHIDsnOxa7M3TJle8ubBf3nXdWAmDxB/jU5z+DESOGwzDMS1xcIQSElJgwYRz+6Uc/wN0L70q5aEoZq6vtO3bh/PkqMMaQnZ2FRx9ZhMLCYdaIm4E1a9e326t1hkgkAiFiz+yi3SV/dViXiXZsmB1cT1zWdu1e/8DBcpw4cRKapsLtceORxQ9hwvixiEYi4FzBmnUbOjVikwqSt9GL7XTAgALccvNNCIfD0DQNNTUXEAqF24TOsXKGwmFLQAWyszKtUVSjVTuy6+DuhXdhypRJl7Ux3hlD55yB2z85i8d7UkoUFPSPZbKtLw4Ggz0uMO3fSyxJVV9Xj6bmZiiKAlVRMWjggF5VTvsBVlSexpFjx+HxuNHS0oJZM2/BmDFFME0Tqqpc0gNxzsEZgxASGX5/WubC2MK3bt0GqKqKSDSKm2fcCKfTgVkzb4GQsdzc7t17UV1dA8b4FdlC7DMdvzjvyv11fL2O6sz+25q166zkdATTpk6Bx+PBLTfPgKqqcDqdKC8/hKPHjnc5F3Wlz+TSNnqxnQohkJubHU9xGIYB0zST1DfgcbshhAm324ndu/eisvJ0fEpK2xFiW4wvV19X7LsJ68KB5kA8i88Yg9PpxFV1XSnArgw7YWe/OOeoqDyNl155DYZuoKmpCePGjcGoUSMuTl7rRRw6dBjRSASQEpqmYfbsW+L5sY5CjHQIvC18ZWWHcOz4CSiqiky/H7Nnz4SUEpMn3YAhgwfDNEw0BwJYv2HTFXU2jAFerwfcSrraDSXZq7NiZQ8uJA5aJHt1NCuYMYbKytPYv78MDocDDoeGefNmAwCKikajqGg0IpEIdF3H2rUbusVO4t5rkpdt16dPn4s/Q5/XB5fLmXRIYfToUdB1HZrmQGNTE37ys1/gtf/7E8rLDyPQ0hJvR1c1k7ej5BNjDKo1mWvNuvXgPOZSZWZmIi8vr7Oji2nJvzidDpQdLMcvn3s+ZhBWSYQQaA4EcPbsubirOGnSDfj0px7vsMH2FGfPno+5wEIgKysLAwcMsB5s+pZEdOaapWvXQ0qJSCSCGTdOQ15uLgzDhNPpxOyZt+DV10rgdruwZeuH+Ohdd8RHmTr7Hbpu4q2/rYhPObj0VmI5kIwMP+bPm3PZ5yelhNPhwJGjx7B8xXvQDb1V4j9+Rc4RCUcwbepkFBYOg7AS7MkEZs26DYhEwlAUBRMnTkDhsGEwTROKomDunFk4eLAMbrcbO3fvxscu3I28vNy05vds8WxPcPftP4AtWz+Ex+NBS0sLhg8vtIa3L5bJDpfm3joLW7Z+iOMnTiIzIwO6rmPFivfw/vurkZubixHDCzF+/FhMnDAOubm5rerligSGs4vegI2u6zh77jzefnsF9u07AJ/Ph/qGBsycOQN+vy+e2Or+MElCVRXU1tXhfFXVJUbJOIPL6YTT6YSmabjz9tuQl5vbC6XFiodDoZiLbZrw+7xwOLRWf+/WmrWM6MyZs9i/fz+cTid0XcecObOsECDWi864+UYsX/kuIpEoqqpq8OG2HZg3d06nkp2x+RyxWcrvLH83Zj8suQhFI1EMGTIIc2+djctNhJZSwul04ujRYygrOwTGksuzqihoaGxEZmYmCguHQQoJKK1DAs45GhoasX37TrhcLoTDYdxqeW+2FzFpUjEGDChAbW0dgsEg1m/YhAfuvzdtAqMoCs6dr0JZ+SEYhhEXWykFmpqacejQYXy4bUe8jE6nE3fe+ZGkdSqlhM/nw9e/9mW8+OIr2LtvP6SUcLmcUBQFjY2N2PrhNmzeshWZGRmYOnUy7rvvbuTm5LR7f2r73oAJl9OJbdt34uSpU7Gp8lbfGQmHUVVdg0gkAp/Ph6bmZgwsKMB99yzs8ZEYKQFVVeJ5obZEdR26rsPtcuGXz72AadOm4O+eeAxej6cXjSLFJoXZDdJudBcTmrLbRcaum7XrNyAUivXexTdMQNHoUfGwFACys7Iwe9ZMvLN8JRwODevWb8Cc2TOvaCSpvf7Jzjl09lnZZbfzNaydazLG243s7Wts2rwV9fX1cDgcGDliBKZPnxprSNb8KLfbhdvmz8Urr/4fXC4XNm/ZirsW3A63251y+xJCwOFwYNu2Hdi6dVurNiClHSLF5udEo1FomobPfPqTGDZ0SNKy2CKTm5ONb37jK9izdx+2bt2Gw0eOor6+wRrMUeF2u6EbBlZ/sBZ79x/AV770FEYML0x6TbWjXEZDYyMuXKhtVfGMMaiqCmYp+vDhw/DkFz572eGqxIy10SbB1B6mMOPtibPOLagMhyOYOnUS7r/vHhim2crNlRJoampC2aFDWLduIxgDNmzYBEM38OUvPdlrhqhtMjNj80AURUFDYxMCLQHkOLJ7xHvhnKOpqQkffrgDTqcT0aiOYcOGobLyNHRdjyUTpYSicAwcOAAOhwOqquLEiZM4cKAMxcUTO/RiGEP8fufMngmn0xUbtWrbECwbys7K7PCZ2eI8ZMhgFI0eFUtuJhtOZQyhcBhDBg9OGmIyxhCJRrFx02Y4HA4YhoHhw4fh9OkziEb12KxqKaFwjrzcXPh8XgghcP58FbZt34lb58xKWwcmpbS8l9gcGM5YfHY6pITD6cT48WPxsXvvxogRwyFE+8lxu50yxjCp+AZMKr4BwWAQJ0+ewrHjJ3Cw7BCOHTsOXTeQlZWJuto6/O73L+H73/1/1ozp1tXbiRCJQVWVSwrhdDowrKAA06dNwdxbZ8enFCd1k1TFWhzVAiklmpqaL5tFsK/REmgB5xyGYcLjcXcY79kZe7/fjyFDBrd7/eLiiRg1ciR+/fxvkJWVhR07d+PQocMYN25sty0Q7AzDhg21wlOOpuZmlJWVY9bMWzplqKlcUW1/3+YtH6K2thY+nw9ut4J331uF5SveTdox2T26EBJr1q5HcfHETq/N0TQVjz7ycJdyN5ftdCIRjB83FosefqBLHlRiXXLOsWvXXpw+fQYejxuapmHjpi1Yt35j0u+0BxgURcG6dRswa+bN4Dy1W13b83H698/HgIICmKYJzjmi0SgOHToMRVURCocxfvw4fOXLTyV0Fp3bCiI+suTxYPz4cRg/fhzuvWchjp84iZLX/4zDh4/C5/OhovI0ysoOY8qUYsvueMcCwxhHJBrFtKmTMX/uHBimGaswrsDtdiErKws5OdmXGGEyNXQ6ncjKzER1dQ0URcGJEyfbPQ/FvqnGxkZU11yAqqqIRnX065fX6Yo3TRGPiduKhX39KZOLkZ/fDzU1FwBInDhxCuPGje0dGRirHseOKUJGRkZsaraiYNXqNbh5xk2tepn26i9xBe3VigxjDNGojg0bN0PTHPEE78XeirUaibC9RYdDg8vlxv4DB1FReRpDhwzudHlCofBlOy3b5eGduNbFEFN0woti7drxunXrrb/FPOVY2doGXbE6sEMSl8uFY8dPoKz8ECZOGJ/SDiz2XKKYcdN03Hfv3a3+9ocXX8HqD9bC7/dh5+492LLlQ9x8802dqv9E27FzqYnphhHDC/GFz30GS5b9GLoeBQNw7vx5TEFx53MwjDHohoH8/H6YMGH8FfeUdiGHDRuKAwfL4ff7UH7oMI4dO46RI0fAMMxWimq7yBs3bUFDQwN8Ph8cDg0j28xc7SiH0d60ayElVEVBOBxbzWyXWzf0Lg0JXnZFqmVyV2pItieWk5ON6dOnYtWqD5CZmYljx07g9T+/gUcXP2wJqXnp4jLrO1e+uwr9++djyuTiqxKZ+GrnvftQUXEabrcLjDGMGDE89l2y9Vpeu+NgjOH8+Srouo5gKIy169bjk499vNNlsedxpCqssIdX0cXnYt//4SNHcejwEbhcLgghMLxwKBRVvcS+7PtXOEdVdTVCoXDMi1uzHhMnjE9LiGSLZ+I2C4sXPYTDR46iqqoaqqri1ddKMHLkcPTr1++ydWqaAstXrMScObOQlZnZqtOy/22aJjIzM+DzenGhNhxPKnd5FIklFL6V8loTdhIfWke98U03Tseq1aXxh/bb372EL33x8xg8aNAln9m2fSf+9nZsmDIUCmH48GEYMXx4p+aA2C52e8N23LqnN/76FurqG+D1ehAOh5Gfn98pcbHnUXSHFyOlxL13fxQ7d+5GS0sLfD4vVq58H8IQuP/+e5KGEHV19Xjrb+9g9Qdr4Pf78eQXPoPiGyZecUO1y7F23XpwzhEOx4amn3rqc5CQSXNjtq389c238Zc33oTH7cb2bTtxz8KPIjs7q1ctyegsa9asi88MLxo9Ct/+h6/H9r2Rl+ZrTCGgcI41a9fjd79/GV6vB/v2H8DpM2cxeNDAlIfhdju0ryuEgMfjxqeeeBw/+dl/QlUUNDU148WX/hff/MZXLmmbcU8XDH/68xv481/exOYtH+Lhh+7HlMmTkpZ12/adqK6psfJxUQwcMKDrAnM1yt/WQEeOHI6bZ9yINWvXIzs7G1XV1fi3f/85brxxGkaNGA632436hgYcLCvH7t174w3ZNE3cd89CKKpiVeDlJ0I5HBpOnarE8hXvttlsKBavNjc348iRozhVUQmvNyZg/frlYeKEcUmTe62v7cDJkxV47Y+vtz+Ean2Pz+fFPXd/9IpXXzNrRm5OTjY+8+kn8Myzz0GPRuH1ePDu+6uwd/9+TJ82FYXDhsLlcqKxqRnHj5/Arl17UFtXh6ysTNTW1eONN97C+HFjoVq9bVd3QuOc49ix4ygrPwyXy4lIOIK58+bEnqtofxgZAGbPugXvr/ogtmlRfQM2b9mKhR9d0GcExva+q6qqsXvPPrhcLgRDIWtoXGlXKHi8U52Gd5avRGNjE8LhMNau3YDHPrE47eW2RaaoaBTuu3chSv70BrIyM7Bn7z4sX/Ee7rn7rlYLHe372LFjN/78xpvIy8tFTc0F/PJXL2D0qBG44YYJGDp0CLweL4LBIA6WlWPd+o3QNA2RSAQF/fvH94RqWx9qewXszMzGrj6sjz+6GFXVNSgrK0dGRgYMw0Bp6VqsWbMOsfU2sZt2u92IRqNoaQli8aIHMHnypA5Vn1uuocvlQmXlaRw7djx5o5ESDk2D0+lEcyAAl9OJJx7/RLt7ZFxM+MVmKdfU1GDlu6cvHxfrOvL75eGjd90Zb9hXUr/2fi+TiifiS198Er/7/Ytobg7A6/WitrYOf3t7eXzrTEgJISVcztjS/Lr6BowfNxaf+8zfxUWuy8/Sev/a9RshhAnDYBgxcjjGjCm67MxnO8TLy8vF5EnF2LhpMzweNzZv3oo7bv9I0h3f4ksdujBDtzMN7WrsOHFoOhgMwul0YuCAAkyZMvmy9Wnfv8fjwU03TsPf3lkJr9eLHTt34b57F7a7b1JXytvRe22RuXvhXSgrPxxvc2/97R2MHzcGI0YMTxi+j4WiY8cWYdHDD2LlyvdhmkY8f3T4yFHrmcQCQCFiy0F0XYcQAo888jA8nuTD8EmfZDAYQiDQgkCgpcONb7qStPT5vPjm17+MO27/CIR5cd1SLG60HoyUaGlpQXZWFp78wmdw3713d2oafygctsocQDgcueyDMQwDnHNMnzoZ3/3OtzFp0g2X7VVDoTACgQCarWsnLj9I9uId5KRaWlrQ0hIrq64bneqNpk2djO999//hphunwzAMRCJRa96Gnei0ttIIh+FwOPDgA/fh29/6OgoK+l+RuNhbRZw5cxbr12+EaQg0NjZhzqyZULowiXLOnJkwdAORSATlh45gw6ZN8V4zEV03EAgE4nWTikmaF+040GU7vjixruGiF1ZXj5tn3ASXy5l0S5LkXtxMqIqCYDCIiopKrFr9wSV5Dbs+AnG7aLlkrdCl9xZEoOXybdQexfq7T34cHo8bTU1NaG4O4JfPPY+6uvpW5WCMwev1YNFD9+M7T38L06ZNAWOwFtXGRgPtuTV2m+jfPx/f+NqXMPUyCx6ZbHOnUkqsWbMO9Q2NME0TRUWjMal4Ykrc2sRrnDlzDrv37MGpikoEmgMwRWwfkNycXIwpGo3i4gnwer0dfm+8l9m0BWfOnmt3gp1diS6XE3l5eRg8eCAK+ve/7EhLfN+TjZtx5szZ+PRqdJC4EqYJj9eLO2+/Le49JO5X8/7qUhi6gagexS0334RhQzveKiJx7kJFRQV279mPUxUVaG4OQAgBp8OB7JxsjB45EsXFE5CdnX1Vo0j2544dO4EdO3dZe71w3PGR+XB7Oj9pTAiBVatKEWiJNZohgwe1Gs2wf56qqMDmLR/CoTmgqgruuP22q56ctvqDNbE9i00T48YUddiRJLv/M2fOYtPmrXA4HDBNE7fNn4usrMwulSu2b1IdpATy8nIwb+6c+FaF9nUaGhqx+oM1YJzBNEzMvXU28vOTJ2SFEFj9wVo0NzfDNE2MHz8WE8aPu+wudfv2H0BZ2aFYmBcMYurUySgaPardbW4B4Ny58ygvP4yTp06hoaERhmFA0zTk5uZgzJgiFBdPhCv5rpcmYsdPv3iJwHRHXBvbU4QlHXlJlgNIZ1muKHTowZxAsuRcMg+vu08WIHq33XQ199ZZ22mnjcYFRm3vQ4m9fqqP7LBnbCbO2WDAJQsquzqc2PVysLRcOzG8SWX9Ju4+ljgkmZisu5K667hDkB3eU2frr737TcX3pMOOZQrOnmptP6zdgYqulLcr77U9xc7eR+I8mMT22PY6nRpFlu0NYBMEQVwZrTwY8qEJgkgldmSkqADOUX0QBJFiD8YJoO7/A4Q5IC+oxT9AAAAAAElFTkSuQmCC" alt="TDS Public Affairs" style="height:60px;width:auto;margin-bottom:.75rem;filter:brightness(.9)">
+        <p class="footer-tagline">Operating where governance, culture, and public influence converge — with precision, integrity, and long-term focus.</p>
+        <a href="mailto:info@TDSPublicAffairs.com" class="footer-email">info@TDSPublicAffairs.com</a>
+      </div>
+      <div>
+        <p class="footer-col-label">Navigation</p>
+        <ul class="footer-links">
+          <li><a href="#" onclick="navigate('home');return false">Home</a></li>
+          <li><a href="#" onclick="navigate('about');return false">About</a></li>
+          <li><a href="#" onclick="navigate('solutions');return false">What We Do</a></li>
+          <li><a href="#" onclick="navigate('insights');return false">Insights</a></li>
+          <li><a href="#" onclick="navigate('contact');return false">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="footer-col-label">Stay Updated</p>
+        <p style="font-size:.78rem;color:rgba(255,255,255,.38);font-weight:300;line-height:1.65;margin-bottom:.9rem">Subscribe to receive our latest insights and firm updates.</p>
+        <form name="newsletter" method="POST" data-netlify="true" netlify-honeypot="bot-field" style="width:100%">
+          <input type="hidden" name="form-name" value="newsletter">
+          <p style="display:none"><input name="bot-field"></p>
+          <div class="nl-row">
+            <input type="email" name="email" class="nl-input" placeholder="Your email address" required>
+            <button type="submit" class="nl-btn">Subscribe</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-legal">&copy; 2026 TDS Public Affairs. All rights reserved.</p>
+      <p class="footer-legal"><a href="#">Privacy Policy</a><span>&middot;</span><a href="#">Accessibility</a></p>
+    </div>
+  </div>`;
+}
+
+/* ── Post card HTML ─────────────────────────────────────────── */
+function postCard(p, onclick){
+  return `<div class="post-card" onclick="${onclick}">
+    <div class="post-card-img"><img src="${p.img}" alt="${p.title}" loading="lazy" onerror="this.parentElement.style.background='var(--navy-light)'"></div>
+    <div class="post-card-body">
+      <p class="post-meta">${p.date} &nbsp;·&nbsp; ${p.read}</p>
+      <p class="post-card-title">${p.title}</p>
+      <p class="post-card-excerpt">${p.excerpt}</p>
+    </div>
+    <div class="post-card-footer">
+      <span class="post-read-link">Read More <svg class="arrow-svg" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+      <span style="font-size:.65rem;color:var(--muted);letter-spacing:.04em">${p.read}</span>
+    </div>
+  </div>`;
+}
+
+/* ── Sidebar posts ──────────────────────────────────────────── */
+function sidebarPosts(currentId){
+  return POSTS.filter(p=>p.id!==currentId).slice(0,4).map(p=>`
+    <div class="sidebar-post" onclick="navigate('post',{id:'${p.id}'})">
+      <p class="sidebar-post-date">${p.date}</p>
+      <p class="sidebar-post-title">${p.title}</p>
+    </div>`).join('');
+}
+
+/* ── Render post ────────────────────────────────────────────── */
+function renderPost(id){
+  const p = POSTS.find(x=>x.id===id);
+  if(!p) return navigate('insights');
+  document.getElementById('postContent').innerHTML = `
+    <section class="post-hero">
+      <div class="post-hero-inner">
+        <p class="post-cat">Perspective &nbsp;·&nbsp; TDS Public Affairs</p>
+        <h1 class="post-hero-title">${p.title}</h1>
+        <div class="post-byline">
+          <span>${p.date}</span>
+          <span>&middot;</span>
+          <span>${p.read}</span>
+        </div>
+      </div>
+    </section>
+    <section class="post-body">
+      <div class="post-body-inner">
+        <div class="post-content">
+          <img class="post-feat-img" src="${p.img}" alt="${p.title}" loading="lazy">
+          <div class="post-text">${p.body}</div>
+          <div style="margin-top:3rem;padding-top:2rem;border-top:1px solid var(--border)">
+            <button class="btn btn-dark" onclick="navigate('insights')" style="margin-right:1rem">← All Insights</button>
+            <button class="btn btn-dark" onclick="navigate('contact')">Contact Us <svg class="arrow-svg" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+          </div>
+        </div>
+        <aside class="post-sidebar">
+          <p class="sidebar-label">Recent Posts</p>
+          <div class="sidebar-posts">${sidebarPosts(id)}</div>
+        </aside>
+      </div>
+    </section>`;
+}
+
+/* ── Router ─────────────────────────────────────────────────── */
+function navigate(page, params){
+  // Hide all
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  // Update nav active state
+  document.querySelectorAll('#navLinks a').forEach(a=>{
+    a.classList.toggle('active', a.dataset.page===page);
+  });
+
+  window.scrollTo({top:0,behavior:'instant'});
+
+  if(page==='post' && params && params.id){
+    document.getElementById('page-post').classList.add('active');
+    document.getElementById('footer-post').innerHTML = footerHTML();
+    renderPost(params.id);
+    document.title = POSTS.find(p=>p.id===params.id)?.title + ' | TDS Public Affairs';
+    window.location.hash = 'post-'+params.id;
+  } else {
+    const el = document.getElementById('page-'+page);
+    if(el){ el.classList.add('active'); }
+    else { document.getElementById('page-home').classList.add('active'); page='home'; }
+    document.title = {home:'Home',about:'About',solutions:'What We Do',insights:'Insights',contact:'Contact'}[page] + ' | TDS Public Affairs';
+    window.location.hash = page==='home' ? '' : page;
+  }
+
+  // Trigger fade animations
+  requestAnimationFrame(()=>{
+    requestAnimationFrame(()=>{
+      document.querySelectorAll('.page.active .fu').forEach(el=>{
+        el.classList.remove('vis');
+        void el.offsetWidth;
+      });
+      initObserver();
+    });
+  });
+}
+
+/* ── Intersection observer for fade-in ─────────────────────── */
+let obs;
+function initObserver(){
+  if(obs) obs.disconnect();
+  obs = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('vis'); obs.unobserve(e.target); } });
+  },{threshold:0.1});
+  document.querySelectorAll('.page.active .fu').forEach(el=>obs.observe(el));
+}
+
+/* ── Init ────────────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', ()=>{
+  // Fill footers
+  ['home','about','solutions','insights','contact'].forEach(p=>{
+    const f=document.getElementById('footer-'+p);
+    if(f) f.innerHTML=footerHTML();
+  });
+
+  // Fill home post grid (3 newest)
+  document.getElementById('homePostsGrid').innerHTML = POSTS.slice(0,3).map(p=>postCard(p,`navigate('post',{id:'${p.id}'})`)).join('');
+
+  // Fill all posts grid
+  document.getElementById('allPostsGrid').innerHTML = POSTS.map(p=>postCard(p,`navigate('post',{id:'${p.id}'})`)).join('');
+
+  // Hash routing
+  const hash = location.hash.replace('#','');
+  if(hash.startsWith('post-')){
+    navigate('post',{id:hash.replace('post-','')});
+  } else if(hash && ['about','solutions','insights','contact'].includes(hash)){
+    navigate(hash);
+  } else {
+    navigate('home');
+  }
+
+  // Nav scroll shadow
+  window.addEventListener('scroll',()=>{
+    document.getElementById('nav').style.boxShadow = window.scrollY>30 ? '0 4px 30px rgba(0,0,0,.28)' : 'none';
+  },{passive:true});
+});
+
+
+/* ── Bio modal functions ─────────────────────────────────────── */
+function openBioModal(id){
+  document.getElementById('modal-'+id).classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeBioModal(id){
+  document.getElementById('modal-'+id).classList.remove('open');
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') document.querySelectorAll('.modal-overlay.open').forEach(m=>{ m.classList.remove('open'); document.body.style.overflow=''; }); });
+
+/* ── Contact form — fetch submission, no redirect ───────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('contactForm');
+  if (!form) return;
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const btn = document.getElementById('contactSubmitBtn');
+    const success = document.getElementById('contactSuccess');
+    btn.textContent = 'Sending…';
+    btn.disabled = true;
+    fetch('/', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      body: new URLSearchParams(new FormData(form)).toString()
+    })
+    .then(() => {
+      form.reset();
+      btn.style.display = 'none';
+      success.style.display = 'block';
+    })
+    .catch(() => {
+      btn.textContent = 'Something went wrong — please email us directly.';
+      btn.disabled = false;
+    });
+  });
+});
+</script>
+
+<!-- ── Bio Modals ────────────────────────────────────────────── -->
+<div class="modal-overlay" id="modal-jim" onclick="if(event.target===this)closeBioModal('jim')">
+  <div class="modal">
+    <button class="modal-close" onclick="closeBioModal('jim')">&times;</button>
+    <div class="modal-photo">
+      <img src="https://static.wixstatic.com/media/86455a_1373bd336eff4531aa38d74ab0cad4a9~mv2.png/v1/fill/w_600,h_800,al_c,q_85/1.png" alt="Jim Terry">
+    </div>
+    <div class="modal-body">
+      <p class="modal-eyebrow">TDS Public Affairs</p>
+      <p class="modal-name">Jim Terry</p>
+      <p class="modal-title">President &amp; CEO</p>
+      <div class="modal-text">
+        <p>Jim Terry brings over 30 years of extensive experience in both the policy and campaign arenas, offering a broad array of legislative, strategic, communications, and management skills that help clients build comprehensive, effective, and winning campaigns.</p>
+        <p>A long-time veteran of Capitol Hill, Mr. Terry has served as a campaign manager, political director, and advisor on some of the most high-profile races in the nation and at the National Republican Congressional Committee. He understands the legislative process literally in and out, having served as both a congressional Chief of Staff and Chief Executive at the Free Enterprise Fund, a non-profit advocacy organization dedicated to advancing free-market policies.</p>
+        <p>Since founding TDS Public Affairs in 2007, Mr. Terry has provided strategic communications, public affairs, grassroots, and paid media services to Fortune 500 companies, trade associations, and non-profit organizations. He has appeared on Fox News, CNN, and countless talk radio outlets across the country and has testified before Congress numerous times.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-patty" onclick="if(event.target===this)closeBioModal('patty')">
+  <div class="modal">
+    <button class="modal-close" onclick="closeBioModal('patty')">&times;</button>
+    <div class="modal-photo">
+      <img src="https://static.wixstatic.com/media/86455a_097ed77b2b8544e7a97e5de6c2d399ce~mv2.png/v1/fill/w_600,h_800,al_c,q_85/2.png" alt="Patty Roe">
+    </div>
+    <div class="modal-body">
+      <p class="modal-eyebrow">TDS Public Affairs</p>
+      <p class="modal-name">Patty Roe</p>
+      <p class="modal-title">Vice President</p>
+      <div class="modal-text">
+        <p>Patty Roe is a seasoned political strategist and co-founder of a successful marketing firm, recognized as one of San Diego Magazine's "Women of the Year" in 2015 for her impactful contributions to the political landscape.</p>
+        <p>With a rich background spanning fifteen years in political campaigns, Patty excels in grassroots organization, campaign management, and financial expertise. Having served as a former Chief of Staff on Capitol Hill, she successfully oversaw official, campaign, and finance operations — demonstrating her strategic talent in managing targeted campaigns. She successfully held a congressional district the size of Illinois with just 32% registered Republicans.</p>
+        <p>Before her political career, Patty managed a political fundraising business and spent a decade in the investment industry, marketing global investment products and providing trading and research for institutional clients.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-trisha" onclick="if(event.target===this)closeBioModal('trisha')">
+  <div class="modal">
+    <button class="modal-close" onclick="closeBioModal('trisha')">&times;</button>
+    <div class="modal-photo">
+      <img src="https://static.wixstatic.com/media/86455a_4b51b88a8dd84106a3e904e53f86c244~mv2.png/v1/fill/w_600,h_800,al_c,q_85/3.png" alt="Trisha Guenther">
+    </div>
+    <div class="modal-body">
+      <p class="modal-eyebrow">TDS Public Affairs</p>
+      <p class="modal-name">Trisha Guenther</p>
+      <p class="modal-title">Finance</p>
+      <div class="modal-text">
+        <p>A Certified Public Accountant, Trisha brings nearly three decades of experience serving businesses large and small to her role at TDS.</p>
+        <p>A graduate of the University of Arkansas at Little Rock, she is married with two children.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
