@@ -353,9 +353,46 @@ body{font-family:var(--font-u);background:var(--white);color:var(--text);line-he
   .where-img.tall{aspect-ratio:4/3;grid-row:auto}
   .home-sectors .inner{flex-direction:column;align-items:flex-start}
 }
+
+/* ── Bio Modals ─────────────────────────────────────────────── */
+.modal-overlay{position:fixed;inset:0;background:rgba(8,29,43,.85);z-index:500;display:flex;align-items:center;justify-content:center;padding:clamp(1rem,4vw,3rem);opacity:0;pointer-events:none;transition:opacity .35s}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--white);max-width:780px;width:100%;max-height:90vh;overflow-y:auto;position:relative;display:grid;grid-template-columns:260px 1fr;transition:transform .35s;transform:translateY(20px)}
+.modal-overlay.open .modal{transform:translateY(0)}
+.modal-photo{position:relative;overflow:hidden;background:var(--navy)}
+.modal-photo img{width:100%;height:100%;object-fit:cover;display:block}
+.modal-body{padding:clamp(1.75rem,3vw,2.75rem)}
+.modal-close{position:absolute;top:1rem;right:1rem;background:none;border:none;font-size:1.5rem;color:var(--muted);cursor:pointer;line-height:1;padding:.25rem .5rem;transition:color .2s;z-index:10}
+.modal-close:hover{color:var(--navy)}
+.modal-eyebrow{font-size:.65rem;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:.6rem}
+.modal-name{font-family:var(--font-d);font-size:clamp(1.5rem,3vw,2rem);font-weight:500;color:var(--navy);line-height:1.1;margin-bottom:.3rem}
+.modal-title{font-size:.7rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border)}
+.modal-text{font-size:.92rem;line-height:1.85;color:var(--text);font-weight:300}
+.modal-text p+p{margin-top:1.1rem}
+@media(max-width:600px){
+  .modal{grid-template-columns:1fr}
+  .modal-photo{aspect-ratio:3/2;max-height:220px}
+}
 </style>
 </head>
 <body>
+
+<!-- Hidden forms for Netlify detection — never shown to users -->
+<div style="display:none">
+  <form name="contact" data-netlify="true" netlify-honeypot="bot-field">
+    <input type="hidden" name="form-name" value="contact">
+    <input name="bot-field">
+    <input name="first-name">
+    <input name="last-name">
+    <input name="email">
+    <textarea name="message"></textarea>
+  </form>
+  <form name="newsletter" data-netlify="true" netlify-honeypot="bot-field">
+    <input type="hidden" name="form-name" value="newsletter">
+    <input name="bot-field">
+    <input name="email">
+  </form>
+</div>
 
 <!-- ── NAV ──────────────────────────────────────────────────── -->
 <nav class="nav" id="nav">
@@ -395,7 +432,7 @@ body{font-family:var(--font-u);background:var(--white);color:var(--text);line-he
     <div class="hero-content">
       <p class="hero-ew">TDS Public Affairs</p>
       <h1 class="hero-h1">Navigating Complex<br><em>Public Challenges</em></h1>
-      <p class="hero-sub">Strategy, narrative, and execution for organizations operating in high-stakes public environments.</p>
+      <p class="hero-sub">Strategy, narrative, and execution for organizations navigating public challenges — from emerging issues to full-scale campaigns.</p>
       <div class="hero-cta">
         <button class="btn btn-gold" onclick="navigate('contact')">Start a Conversation <svg class="arrow-svg" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
         <button class="btn btn-light" onclick="navigate('about')">About the Firm <svg class="arrow-svg" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
@@ -430,17 +467,17 @@ body{font-family:var(--font-u);background:var(--white);color:var(--text);line-he
       <div class="svc-card fu">
         <svg class="svc-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
         <p class="svc-name">Strategic Counsel</p>
-        <p class="svc-text">Guiding leadership through complex public, political, and regulatory challenges with clarity and discipline.</p>
+        <p class="svc-text">Trusted counsel for leadership navigating complex public environments — whatever the challenge, whatever the stakes.</p>
       </div>
       <div class="svc-card fu">
         <svg class="svc-icon" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-        <p class="svc-name">Narrative &amp; Communications</p>
-        <p class="svc-text">Crafting authentic messaging that resonates with policymakers, stakeholders, and the public.</p>
+        <p class="svc-name">Crisis Communications &amp; PR</p>
+        <p class="svc-text">When an issue goes public, we help organizations respond with clarity — managing media, controlling narrative, and protecting long-term reputation.</p>
       </div>
       <div class="svc-card fu">
         <svg class="svc-icon" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
         <p class="svc-name">Stakeholder Engagement</p>
-        <p class="svc-text">Building relationships and coalitions that strengthen credibility and expand your reach.</p>
+        <p class="svc-text">Building the relationships and coalitions that move decision-makers — identifying who matters, what they need to hear, and how to reach them.</p>
       </div>
       <div class="svc-card fu">
         <svg class="svc-icon" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
@@ -462,9 +499,10 @@ body{font-family:var(--font-u);background:var(--white);color:var(--text);line-he
         <p class="when-label">When Clients Call Us</p>
         <ul class="when-list">
           <li>An issue becomes public and the stakes are rising</li>
-          <li>Policy or regulatory decisions threaten long-term interests</li>
+          <li>A crisis requires immediate communications response</li>
+          <li>Legislative or regulatory decisions threaten long-term interests</li>
+          <li>Press coverage is shaping the narrative and reporters are calling</li>
           <li>Complex stakeholder environments require coordinated strategy</li>
-          <li>A coalition or grassroots effort must be built quickly</li>
           <li>Leadership needs trusted strategic counsel</li>
         </ul>
       </div>
@@ -477,11 +515,12 @@ body{font-family:var(--font-u);background:var(--white);color:var(--text);line-he
         <p class="eyebrow left">Practice Areas</p>
         <h2 class="section-title">Where We Help <em>Clients</em></h2>
         <ul class="where-list">
-          <li>Federal policy and legislative strategy</li>
+          <li>Policy and legislative strategy</li>
+          <li>Crisis communications and reputation management</li>
+          <li>Media relations and earned PR</li>
           <li>Tribal sovereignty and Indian Country policy</li>
           <li>Complex regulatory disputes</li>
           <li>Coalition-building campaigns</li>
-          <li>Reputation and crisis issues</li>
           <li>Litigation support</li>
         </ul>
         <button class="btn btn-dark" onclick="navigate('contact')" style="margin-top:2.25rem">Start a Conversation <svg class="arrow-svg" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
@@ -528,7 +567,7 @@ body{font-family:var(--font-u);background:var(--white);color:var(--text);line-he
     <div class="cta-band-inner fu">
       <p class="eyebrow" style="justify-content:center">Get in Touch</p>
       <h2 class="cta-h">Start a <em>Conversation</em></h2>
-      <p class="cta-sub">Whether you're navigating a high-stakes moment or building a long-term strategy, we're ready to engage.</p>
+      <p class="cta-sub">Whether you're navigating an emerging issue or running a full-scale campaign, we're ready to engage.</p>
       <button class="btn btn-dark" onclick="navigate('contact')">Contact Us <svg class="arrow-svg" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
     </div>
   </div>
@@ -559,7 +598,7 @@ body{font-family:var(--font-u);background:var(--white);color:var(--text);line-he
       <div class="fu">
         <div class="rule"></div>
         <div class="about-body">
-          <p>TDS Public Affairs operates where governance, culture, and public influence converge. Our team brings experience navigating complex political environments, building disciplined advocacy strategies, and guiding institutions through high-stakes moments.</p>
+          <p>TDS Public Affairs operates where governance, culture, and public influence converge. Our team brings experience navigating complex political environments, leading legislative strategy, managing crisis communications, and guiding institutions through complex and demanding moments.</p>
           <p>We understand both the mechanics of institutional systems and the realities of public perception — and we align the two with precision, integrity, and long-term focus.</p>
         </div>
       </div>
@@ -577,7 +616,7 @@ body{font-family:var(--font-u);background:var(--white);color:var(--text);line-he
         <div class="team-info">
           <p class="team-name">Jim Terry</p>
           <p class="team-title">President &amp; CEO</p>
-          <span class="team-link">Learn More <svg class="arrow-svg" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+          <span class="team-link" onclick="openBioModal('jim')" style="cursor:pointer">Learn More <svg class="arrow-svg" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
         </div>
       </div>
       <div class="team-card fu">
@@ -585,7 +624,7 @@ body{font-family:var(--font-u);background:var(--white);color:var(--text);line-he
         <div class="team-info">
           <p class="team-name">Patty Roe</p>
           <p class="team-title">Vice President</p>
-          <span class="team-link">Learn More <svg class="arrow-svg" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+          <span class="team-link" onclick="openBioModal('patty')" style="cursor:pointer">Learn More <svg class="arrow-svg" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
         </div>
       </div>
       <div class="team-card fu">
@@ -593,7 +632,7 @@ body{font-family:var(--font-u);background:var(--white);color:var(--text);line-he
         <div class="team-info">
           <p class="team-name">Trisha Guenther</p>
           <p class="team-title">Finance</p>
-          <span class="team-link">Learn More <svg class="arrow-svg" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+          <span class="team-link" onclick="openBioModal('trisha')" style="cursor:pointer">Learn More <svg class="arrow-svg" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
         </div>
       </div>
     </div>
@@ -626,7 +665,7 @@ body{font-family:var(--font-u);background:var(--white);color:var(--text);line-he
   <div class="cta-band">
     <div class="cta-band-inner fu">
       <h2 class="cta-h">Start a <em>Conversation</em></h2>
-      <p class="cta-sub">Whether you're navigating a high-stakes moment or building a long-term strategy, we're ready to engage.</p>
+      <p class="cta-sub">Whether you're navigating an emerging issue or running a full-scale campaign, we're ready to engage.</p>
       <button class="btn btn-dark" onclick="navigate('contact')">Contact Us <svg class="arrow-svg" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
     </div>
   </div>
@@ -656,8 +695,8 @@ body{font-family:var(--font-u);background:var(--white);color:var(--text);line-he
         <div class="rule"></div>
         <h2>High-stakes issues rarely present themselves as isolated challenges.</h2>
         <p>They sit at the intersection of policy, reputation, and stakeholder dynamics — and require a coordinated, disciplined response.</p>
-        <p>TDS Public Affairs works with organizations navigating complex public environments where outcomes are shaped not just by decisions, but by how they are understood, communicated, and supported.</p>
-        <p>Our work is grounded in strategy. From there, we help clients bring together the right combination of communications, stakeholder engagement, and public influence to move issues forward.</p>
+        <p>TDS Public Affairs works with organizations navigating complex public environments where outcomes are shaped not just by decisions, but by how they are understood, communicated, and supported. We bring deep experience in legislative strategy, crisis communications, and media relations.</p>
+        <p>Our work is grounded in strategy. From there, we help clients bring together the right combination of communications, stakeholder engagement, public influence, and direct PR support to move issues forward.</p>
       </div>
       <div class="sol-intro-img fu">
         <img src="https://static.wixstatic.com/media/86455a_2a04ee4eb6204d1b84feab77715e1165~mv2.jpg/v1/fill/w_600,h_800,al_c,q_85/sol.jpg" alt="" loading="lazy" style="width:100%;aspect-ratio:3/4;object-fit:cover">
@@ -701,8 +740,8 @@ body{font-family:var(--font-u);background:var(--white);color:var(--text);line-he
       </div>
       <div class="core-card fu">
         <p class="core-card-num">02</p>
-        <p class="core-card-name">Narrative &amp; Communications</p>
-        <p class="core-card-text">Public issues are shaped by how they are understood. We help clients define clear, credible narratives and ensure those narratives are consistently reflected across communications, stakeholder engagement, and public discussion.</p>
+        <p class="core-card-name">Narrative, Communications &amp; PR</p>
+        <p class="core-card-text">Public issues are shaped by how they are understood. We help clients define clear, credible narratives and ensure those narratives are consistently reflected across media relations, stakeholder engagement, and public discussion — including earned media strategy, reporter relationships, and knowing how coverage shapes the environment around a decision.</p>
       </div>
       <div class="core-card fu">
         <p class="core-card-num">03</p>
@@ -711,14 +750,20 @@ body{font-family:var(--font-u);background:var(--white);color:var(--text);line-he
       </div>
       <div class="core-card fu">
         <p class="core-card-num">04</p>
+        <p class="core-card-name">Crisis Communications</p>
+        <p class="core-card-text">When an issue erupts publicly, the first hours matter most. We help organizations respond with discipline — assessing the landscape quickly, defining the right posture, managing media, and protecting institutional credibility through the full arc of a crisis.</p>
+      </div>
+      <div class="core-card fu">
+        <p class="core-card-num">05</p>
+        <p class="core-card-name">Legislative Strategy</p>
+        <p class="core-card-text">We help clients navigate the legislative process — from tracking bills and building relationships with key members and staff, to developing testimony, drafting advocacy materials, and coordinating the stakeholder engagement that moves policy forward.</p>
+      </div>
+      <div class="core-card fu">
+        <p class="core-card-num">06</p>
         <p class="core-card-name">Public Influence Campaigns</p>
         <p class="core-card-text">When issues require broader engagement, we design and execute coordinated efforts that bring together communications, advocacy, and coalition-building — structured to apply pressure at the right moments and in the right places.</p>
       </div>
-      <div class="core-card fu" style="grid-column:1/-1">
-        <p class="core-card-num">05</p>
-        <p class="core-card-name">Coalition Development</p>
-        <p class="core-card-text">Credible coalitions can shape policy outcomes and strengthen public understanding. We help build and align coalitions that reflect real stakeholder interests and reinforce strategic objectives — designed not for breadth but for the specific decision being pursued.</p>
-      </div>
+
     </div>
   </section>
 
@@ -754,7 +799,7 @@ body{font-family:var(--font-u);background:var(--white);color:var(--text);line-he
     <div style="max-width:600px;margin:0 auto;text-align:center">
       <p class="eyebrow" style="justify-content:center">TDS Public Affairs</p>
       <h2 class="cta-h">Learn What We Do</h2>
-      <p class="cta-sub">Strategy, narrative, and execution for organizations operating in high-stakes public environments.</p>
+      <p class="cta-sub">Strategy, narrative, and execution for organizations navigating public challenges — from emerging issues to full-scale campaigns.</p>
       <button class="btn btn-dark" onclick="navigate('solutions')">Our Services <svg class="arrow-svg" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
     </div>
   </div>
@@ -787,32 +832,36 @@ body{font-family:var(--font-u);background:var(--white);color:var(--text);line-he
             <svg class="cd-icon" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
             <p class="cd-text"><a href="mailto:info@TDSPublicAffairs.com">info@TDSPublicAffairs.com</a></p>
           </div>
-          <div class="cd-row">
-            <svg class="cd-icon" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            <p class="cd-text">Washington, D.C.</p>
-          </div>
+
         </div>
       </div>
       <div class="contact-form fu">
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">First Name <sup>*</sup></label>
-            <input type="text" class="form-input" placeholder="First name">
+        <form name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/thank-you.html">
+          <input type="hidden" name="form-name" value="contact">
+          <p style="display:none"><input name="bot-field"></p>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">First Name <sup>*</sup></label>
+              <input type="text" name="first-name" class="form-input" placeholder="First name" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Last Name <sup>*</sup></label>
+              <input type="text" name="last-name" class="form-input" placeholder="Last name" required>
+            </div>
           </div>
           <div class="form-group">
-            <label class="form-label">Last Name <sup>*</sup></label>
-            <input type="text" class="form-input" placeholder="Last name">
+            <label class="form-label">Email <sup>*</sup></label>
+            <input type="email" name="email" class="form-input" placeholder="your@email.com" required>
           </div>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Email <sup>*</sup></label>
-          <input type="email" class="form-input" placeholder="your@email.com">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Message</label>
-          <textarea class="form-textarea" placeholder="Tell us about your situation or what you're working on…"></textarea>
-        </div>
-        <button class="form-submit" onclick="handleContactSubmit(this)">Submit Message</button>
+          <div class="form-group">
+            <label class="form-label">Message</label>
+            <textarea name="message" class="form-textarea" placeholder="Tell us about your situation or what you're working on…"></textarea>
+          </div>
+          <button type="submit" class="form-submit" id="contactSubmitBtn">Submit Message</button>
+          <div id="contactSuccess" style="display:none;margin-top:1.5rem;padding:1.25rem 1.5rem;background:var(--navy);color:var(--white);font-size:.88rem;line-height:1.7;letter-spacing:.02em">
+            Thank you — we'll be in touch shortly.
+          </div>
+        </form>
       </div>
     </div>
   </section>
@@ -1007,10 +1056,14 @@ function footerHTML(){
       <div>
         <p class="footer-col-label">Stay Updated</p>
         <p style="font-size:.78rem;color:rgba(255,255,255,.38);font-weight:300;line-height:1.65;margin-bottom:.9rem">Subscribe to receive our latest insights and firm updates.</p>
-        <div class="nl-row">
-          <input type="email" class="nl-input" placeholder="Your email address">
-          <button class="nl-btn">Subscribe</button>
-        </div>
+        <form name="newsletter" method="POST" data-netlify="true" netlify-honeypot="bot-field" style="width:100%">
+          <input type="hidden" name="form-name" value="newsletter">
+          <p style="display:none"><input name="bot-field"></p>
+          <div class="nl-row">
+            <input type="email" name="email" class="nl-input" placeholder="Your email address" required>
+            <button type="submit" class="nl-btn">Subscribe</button>
+          </div>
+        </form>
       </div>
     </div>
     <div class="footer-bottom">
@@ -1156,14 +1209,102 @@ document.addEventListener('DOMContentLoaded', ()=>{
   },{passive:true});
 });
 
-/* ── Contact form ────────────────────────────────────────────── */
-function handleContactSubmit(btn){
-  btn.textContent = 'Message Sent — Thank You';
-  btn.style.background = 'var(--gold)';
-  btn.style.color = 'var(--navy-deep)';
-  btn.style.borderColor = 'var(--gold)';
-  btn.disabled = true;
+
+/* ── Bio modal functions ─────────────────────────────────────── */
+function openBioModal(id){
+  document.getElementById('modal-'+id).classList.add('open');
+  document.body.style.overflow='hidden';
 }
+function closeBioModal(id){
+  document.getElementById('modal-'+id).classList.remove('open');
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') document.querySelectorAll('.modal-overlay.open').forEach(m=>{ m.classList.remove('open'); document.body.style.overflow=''; }); });
+
+/* ── Contact form — fetch submission, no redirect ───────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('contactForm');
+  if (!form) return;
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const btn = document.getElementById('contactSubmitBtn');
+    const success = document.getElementById('contactSuccess');
+    btn.textContent = 'Sending…';
+    btn.disabled = true;
+    fetch('/', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      body: new URLSearchParams(new FormData(form)).toString()
+    })
+    .then(() => {
+      form.reset();
+      btn.style.display = 'none';
+      success.style.display = 'block';
+    })
+    .catch(() => {
+      btn.textContent = 'Something went wrong — please email us directly.';
+      btn.disabled = false;
+    });
+  });
+});
 </script>
+
+<!-- ── Bio Modals ────────────────────────────────────────────── -->
+<div class="modal-overlay" id="modal-jim" onclick="if(event.target===this)closeBioModal('jim')">
+  <div class="modal">
+    <button class="modal-close" onclick="closeBioModal('jim')">&times;</button>
+    <div class="modal-photo">
+      <img src="https://static.wixstatic.com/media/86455a_1373bd336eff4531aa38d74ab0cad4a9~mv2.png/v1/fill/w_600,h_800,al_c,q_85/1.png" alt="Jim Terry">
+    </div>
+    <div class="modal-body">
+      <p class="modal-eyebrow">TDS Public Affairs</p>
+      <p class="modal-name">Jim Terry</p>
+      <p class="modal-title">President &amp; CEO</p>
+      <div class="modal-text">
+        <p>Jim Terry brings over 30 years of extensive experience in both the policy and campaign arenas, offering a broad array of legislative, strategic, communications, and management skills that help clients build comprehensive, effective, and winning campaigns.</p>
+        <p>A long-time veteran of Capitol Hill, Mr. Terry has served as a campaign manager, political director, and advisor on some of the most high-profile races in the nation and at the National Republican Congressional Committee. He understands the legislative process literally in and out, having served as both a congressional Chief of Staff and Chief Executive at the Free Enterprise Fund, a non-profit advocacy organization dedicated to advancing free-market policies.</p>
+        <p>Since founding TDS Public Affairs in 2007, Mr. Terry has provided strategic communications, public affairs, grassroots, and paid media services to Fortune 500 companies, trade associations, and non-profit organizations. He has appeared on Fox News, CNN, and countless talk radio outlets across the country and has testified before Congress numerous times.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-patty" onclick="if(event.target===this)closeBioModal('patty')">
+  <div class="modal">
+    <button class="modal-close" onclick="closeBioModal('patty')">&times;</button>
+    <div class="modal-photo">
+      <img src="https://static.wixstatic.com/media/86455a_097ed77b2b8544e7a97e5de6c2d399ce~mv2.png/v1/fill/w_600,h_800,al_c,q_85/2.png" alt="Patty Roe">
+    </div>
+    <div class="modal-body">
+      <p class="modal-eyebrow">TDS Public Affairs</p>
+      <p class="modal-name">Patty Roe</p>
+      <p class="modal-title">Vice President</p>
+      <div class="modal-text">
+        <p>Patty Roe is a seasoned political strategist and co-founder of a successful marketing firm, recognized as one of San Diego Magazine's "Women of the Year" in 2015 for her impactful contributions to the political landscape.</p>
+        <p>With a rich background spanning fifteen years in political campaigns, Patty excels in grassroots organization, campaign management, and financial expertise. Having served as a former Chief of Staff on Capitol Hill, she successfully oversaw official, campaign, and finance operations — demonstrating her strategic talent in managing targeted campaigns. She successfully held a congressional district the size of Illinois with just 32% registered Republicans.</p>
+        <p>Before her political career, Patty managed a political fundraising business and spent a decade in the investment industry, marketing global investment products and providing trading and research for institutional clients.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-trisha" onclick="if(event.target===this)closeBioModal('trisha')">
+  <div class="modal">
+    <button class="modal-close" onclick="closeBioModal('trisha')">&times;</button>
+    <div class="modal-photo">
+      <img src="https://static.wixstatic.com/media/86455a_4b51b88a8dd84106a3e904e53f86c244~mv2.png/v1/fill/w_600,h_800,al_c,q_85/3.png" alt="Trisha Guenther">
+    </div>
+    <div class="modal-body">
+      <p class="modal-eyebrow">TDS Public Affairs</p>
+      <p class="modal-name">Trisha Guenther</p>
+      <p class="modal-title">Finance</p>
+      <div class="modal-text">
+        <p>A Certified Public Accountant, Trisha brings nearly three decades of experience serving businesses large and small to her role at TDS.</p>
+        <p>A graduate of the University of Arkansas at Little Rock, she is married with two children.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
